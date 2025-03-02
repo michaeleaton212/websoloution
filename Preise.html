@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects - Michael Eaton</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --bg-color: #f7fafc; /* Helles Grau für den Hintergrund */
+            --navbar-bg-color: transparent; /* Transparente Navigationsleiste */
+            --footer-bg-color: transparent; /* Transparenter Footer */
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: #2d3748; /* Dunkles Grau für den Text */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            cursor: none;
+        }
+        a, button {
+            cursor: none !important;
+        }
+        input, textarea {
+            caret-color: transparent;
+        }
+        .navbar {
+            background-color: var(--navbar-bg-color);
+        }
+        .footer {
+            background-color: var(--footer-bg-color);
+        }
+        #cursor {
+            width: 17px;
+            height: 17px;
+            background-color: rgba(45, 55, 72, 0.6);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            transition: width 0.2s ease, height 0.2s ease, background-color 0.2s ease;
+            z-index: 9999;
+        }
+        .hovered {
+            width: 35px !important;
+            height: 35px !important;
+            background-color: rgba(45, 55, 72, 0.6) !important;
+        }
+    </style>
+</head>
+<body>
+    <div id="cursor"></div>
+    <div>
+        <div class="flex-grow">
+            <div class="flex justify-center mt-10">
+            </div>
+        
+<!-- Korrigierte Navbar mit richtigen Links in allen Dateien -->
+<nav class="bg-transparent py-4">
+    <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row sm:items-center sm:justify-center">
+        <button id="menu-toggle" class="sm:hidden text-gray-800 focus:outline-none">☰</button>
+        <ul id="menu" class="hidden sm:flex flex-col sm:flex-row sm:items-center sm:space-x-6 text-center mt-4 sm:mt-0">
+            <li><a href="Home.html" class="block px-6 py-3 rounded-lg text-gray-800 hover:bg-gray-400 transition">Home</a></li>
+            <li><a href="Ueber-uns.html" class="block px-6 py-3 rounded-lg text-gray-800 hover:bg-gray-400 transition">Über uns</a></li>
+            <li><a href="Leistungen.html" lass="block px-6 py-3 rounded-lg text-gray-800 hover:bg-gray-400 transition">Leistungen</a></li>
+            <li><a href="Preise.html" class="block px-6 py-3 rounded-lg text-gray-800 font-bold hover:bg-gray-400 transition">Preise</a></li>
+            <li><a href="Kontakt.html" class="block px-6 py-3 rounded-lg text-gray-800 hover:bg-gray-400 transition">Kontakt</a></li>
+        </ul>
+    </div>
+</nav>
+
+
+
+    
+
+<div class="text-center">
+    <p class="text-gray-700 mt-2">Transparent and affordable pricing for your business needs.</p>
+    <p class="text-gray-700">Get a high-quality website at a reasonable cost.</p>
+</div>
+
+<div class="flex flex-col items-center sm:flex-row sm:justify-center sm:space-x-6 mt-10 space-y-6 sm:space-y-0">
+    <div class="project bg-white p-6 rounded-lg shadow-lg flex flex-col items-center w-60 sm:w-80 min-h-[220px] border border-gray-300 transition-all transform hover:scale-105 hover:shadow-2xl hover:border-gray-500">
+        <p class="text-xl font-bold text-gray-800">New Website Creation</p>
+        <p class="text-gray-600 mt-2 text-center">Starting at 399 CHF</p>
+        <p class="text-gray-500 mt-2 text-center text-sm">Custom design tailored to your brand.</p>
+    </div>
+    <div class="project bg-white p-6 rounded-lg shadow-lg flex flex-col items-center w-60 sm:w-80 min-h-[220px] border border-gray-300 transition-all transform hover:scale-105 hover:shadow-2xl hover:border-gray-500">
+        <p class="text-xl font-bold text-gray-800 text-center">Monthly Maintenance</p>
+        <p class="text-gray-600 mt-2 text-center">From 19.99 CHF/month</p>
+        <p class="text-gray-500 mt-2 text-center text-sm">Includes updates, security, and backups.</p>
+    </div>
+    <div class="project bg-white p-6 rounded-lg shadow-lg flex flex-col items-center w-60 sm:w-80 min-h-[220px] border border-gray-300 transition-all transform hover:scale-105 hover:shadow-2xl hover:border-gray-500">
+        <p class="text-xl font-bold text-gray-800">Domain & Hosting</p>
+        <p class="text-gray-600 mt-2 text-center">Additional costs based on provider</p>
+        <p class="text-gray-500 mt-2 text-center text-sm">Assistance with setup and configuration.</p>
+    </div>
+</div>
+
+<p class="text-center text-gray-700 mt-8">
+    💬 Exact pricing is determined in a free consultation. 
+    <a href="https://michaeleaton212.github.io/Michael-Eaton/index.html" target="_blank" class="text-blue-600 hover:underline">Contact us</a> to discuss your needs!
+</p>
+
+
+    <footer class="footer text-center py-4 text-gray-600 w-full">
+        📧 Email: <a href="mailto:michael.eaton@siemens.com" class="text-blue-500 hover:underline">michael.eaton212@gmail.com</a>
+    </footer>
+
+    <script>
+        document.getElementById('menu-toggle').addEventListener('click', function() {
+            document.getElementById('menu').classList.toggle('hidden');
+        });
+
+        const cursor = document.getElementById("cursor");
+
+        if (cursor) {
+            document.addEventListener("mousemove", (e) => {
+                cursor.style.top = `${e.clientY}px`;
+                cursor.style.left = `${e.clientX}px`;
+            });
+
+            document.querySelectorAll(".nav-link, .project").forEach((el) => {
+                el.addEventListener("mouseenter", () => cursor.classList.add("hovered"));
+                el.addEventListener("mouseleave", () => cursor.classList.remove("hovered"));
+            });
+        } else {
+            console.warn("Element '#cursor' not found.");
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Websolutions - About Me</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --bg-color: #f7fafc;
+            --navbar-bg-color: transparent;
+            --footer-bg-color: transparent;
+        }
+        body {
+            background-color: var(--bg-color);
+            color: #2d3748;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            cursor: none;
+        }
+        a, button {
+            cursor: none !important;
+        }
+        input, textarea {
+            caret-color: transparent;
+        }
+        #cursor {
+            width: 17px;
+            height: 17px;
+            background-color: rgba(45, 55, 72, 0.6);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            transition: width 0.2s ease, height 0.2s ease, background-color 0.2s ease, transform 0.05s ease-out;
+            z-index: 9999;
+        }
+        .hovered {
+            width: 35px !important;
+            height: 35px !important;
+            background-color: rgba(45, 55, 72, 0.6) !important;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 1.5s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+    <div id="cursor"></div>
+
+    <div class="flex-grow">
+        <div class="flex justify-center mt-10">
+        </div>
+
+        <nav class="bg-transparent py-4">
+            <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row sm:items-center sm:justify-center">
+                <button id="menu-toggle" class="sm:hidden text-gray-800 focus:outline-none">☰</button>
+                <ul id="menu" class="hidden sm:flex flex-col sm:flex-row sm:items-center sm:space-x-6 text-center mt-4 sm:mt-0">
+                    <li><a href="Home.html" class="block px-6 py-3 rounded-lg text-gray-800 hover:bg-gray-400 transition">Home</a></li>
+                    <li><a href="Ueber-uns.html" class="block px-6 py-3 rounded-lg text-gray-800 font-bold hover:bg-gray-400 transition">Über uns</a></li>
+                    <li><a href="Leistungen.html" class="block px-6 py-3 rounded-lg text-gray-800 hover:bg-gray-400 transition">Leistungen</a></li>
+                    <li><a href="Preise.html" class="block px-6 py-3 rounded-lg text-gray-800 hover:bg-gray-400 transition">Preise</a></li>
+                    <li><a href="Kontakt.html" class="block px-6 py-3 rounded-lg text-gray-800 hover:bg-gray-400 transition">Kontakt</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="flex justify-center mt-10">
+            <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md sm:max-w-lg lg:max-w-xl border border-gray-300 transition-all transform hover:scale-105 hover:shadow-2xl hover:border-gray-500">
+                <p class="text-xl font-bold text-gray-800">Welcome to WebSolutions, your trusted partner for professional and modern web design.</p>
+                <p class="mt-2 text-gray-600">
+                    My name is Michael Eaton, and I am the founder of WebSolutions. I personally take care of every project, from the first idea to the finished website.
+                    I create custom, user-friendly, and mobile-friendly websites for small businesses, freelancers, and organizations. Whether you need a website for your business, personal brand, or portfolio, I will make sure it looks great and works perfectly.
+                </p>
+                <p class="mt-4 text-center">
+                    If you want to get in touch, <a href="https://michaeleaton212.github.io/Michael-Eaton/index.html" target="_blank" class="text-blue-600 hover:underline">contact me here</a>.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer text-center py-4 text-gray-600 w-full mt-auto">
+        📧 Email: <a href="mailto:michael.eaton@siemens.com" class="text-blue-500 hover:underline">michael.eaton212@gmail.com</a>
+    </footer>
+
+    <script>
+        document.getElementById('menu-toggle').addEventListener('click', function() {
+            document.getElementById('menu').classList.toggle('hidden');
+        });
+
+        const cursor = document.getElementById("cursor");
+
+        document.addEventListener("mousemove", (e) => {
+            cursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+        });
+
+        document.querySelectorAll(".nav-link, .bg-white").forEach((el) => {
+            el.addEventListener("mouseenter", () => cursor.classList.add("hovered"));
+            el.addEventListener("mouseleave", () => cursor.classList.remove("hovered"));
+        });
+    </script>
+</body>
+</html>

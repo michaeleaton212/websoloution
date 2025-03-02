@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Websolutions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --bg-color: #f7fafc;
+            --navbar-bg-color: transparent;
+            --footer-bg-color: transparent;
+        }
+        body {
+            background-color: var(--bg-color);
+            color: #2d3748;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            cursor: none;
+        }
+        a, button {
+            cursor: none !important;
+        }
+        input, textarea {
+            caret-color: transparent;
+        }
+        .navbar {
+            background-color: var(--navbar-bg-color);
+            border-bottom: none;
+            box-shadow: none;
+        }
+        .footer {
+            background-color: var(--footer-bg-color);
+        }
+        #cursor {
+            width: 17px;
+            height: 17px;
+            background-color: rgba(45, 55, 72, 0.6);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            transition: width 0.2s ease, height 0.2s ease, background-color 0.2s ease, transform 0.05s ease-out;
+            z-index: 9999;
+        }
+        .hovered {
+            width: 35px !important;
+            height: 35px !important;
+            background-color: rgba(45, 55, 72, 0.6) !important;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 1.5s ease-out forwards;
+        }
+    </style>
+</head>
+<body>
+    <div id="cursor"></div>
+    <div>
+        <div class="flex justify-center mt-10">
+        </div>
+
+       <!-- Korrigierte Navbar mit richtigen Links in allen Dateien -->
+       <nav class="bg-transparent py-4">
+        <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row sm:items-center sm:justify-center">
+            <button id="menu-toggle" class="sm:hidden text-gray-800 focus:outline-none">☰</button>
+            <ul id="menu" class="hidden sm:flex flex-col sm:flex-row sm:items-center sm:space-x-6 text-center mt-4 sm:mt-0">
+                <li><a href="Home.html" class="block px-6 py-3 rounded-lg text-gray-800 font-bold hover:bg-gray-400 transition">Home</a></li>
+                <li><a href="Ueber-uns.html" class="block px-6 py-3 rounded-lg text-gray-800 hover:bg-gray-400 transition">Über uns</a></li>
+                <li><a href="Leistungen.html" class="block px-6 py-3 rounded-lg text-gray-800 hover:bg-gray-400 transition">Leistungen</a></li>
+                <li><a href="Preise.html" class="block px-6 py-3 rounded-lg text-gray-800 hover:bg-gray-400 transition">Preise</a></li>
+                <li><a href="Kontakt.html" class="block px-6 py-3 rounded-lg text-gray-800 hover:bg-gray-400 transition">Kontakt</a></li>
+            </ul>
+        </div>
+    
+
+
+        <div class="flex flex-col items-center justify-center h-[60vh] text-center px-4">
+            <h1 class="text-5xl sm:text-6xl font-bold">Websolutions</h1>
+            <h2 class="text-2xl sm:text-3xl mt-2 text-gray-600 fade-in">Your Website. Your Success.</h2>
+        </div>
+    </div>
+
+    <footer class="footer text-center py-4 text-gray-600 w-full">
+        📧 Email: <a href="mailto:michael.eaton@siemens.com" class="text-blue-500 hover:underline">michael.eaton212@gmail.com</a>
+    </footer>
+
+    <script>
+        document.getElementById('menu-toggle').addEventListener('click', function() {
+            document.getElementById('menu').classList.toggle('hidden');
+        });
+
+        const cursor = document.getElementById("cursor");
+
+        document.addEventListener("mousemove", (e) => {
+            cursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+        });
+
+        document.querySelectorAll(".nav-link, .footer").forEach((el) => {
+            el.addEventListener("mouseenter", () => cursor.classList.add("hovered"));
+            el.addEventListener("mouseleave", () => cursor.classList.remove("hovered"));
+        });
+    </script>
+</body>
+</html>
