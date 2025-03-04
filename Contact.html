@@ -104,54 +104,61 @@ Fill out the form below, and we will get back to you as soon as possible. Whethe
         📧 Email: <a href="mailto:websolutionsrafz@gmail.com" class="text-blue-500 hover:underline">websolutionsrafz@gmail.com</a>
     </footer>
 
-   <script>
+  <script>
     (function() {
         emailjs.init("PqPY56nEQgsXhzvaJ"); // Ersetze mit deinem Public Key
     })();
 
-    document.getElementById('contact-form').addEventListener('submit', function(event) {
-        event.preventDefault();
+    document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById('contact-form').addEventListener('submit', function(event) {
+            event.preventDefault();
 
-        const statusMessage = document.getElementById("status-message");
-        const name = document.getElementById('name').value;
-        const email = document.getElementById('email').value;
-        const message = document.getElementById('message').value;
+            const statusMessage = document.getElementById("status-message");
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const message = document.getElementById('message').value.trim();
 
-        if (!name || !email || !message) {
-            statusMessage.textContent = "Bitte füllen Sie alle Felder aus.";
-            statusMessage.style.color = "red";
-            return;
-        }
+            if (!name || !email || !message) {
+                statusMessage.textContent = "Bitte füllen Sie alle Felder aus.";
+                statusMessage.style.color = "red";
+                return;
+            }
 
-        // 1. Email an WebSolutions senden
-        emailjs.send("service_6rczoex", "template_bnv5z4o", {
-            from_name: name,
-            from_email: email,
-            message: message,
-            to_email: "websolutionsrafz@gmail.com"
-        })
-        .then(function(response) {
-            console.log("Email an WebSolutions gesendet:", response);
+            statusMessage.textContent = "Senden läuft...";
+            statusMessage.style.color = "blue";
 
-            // 2. Bestätigungsmail an den Absender senden
-            return emailjs.send("service_6rczoex", "template_confirmation", {
-                from_name: "WebSolutions Team",
-                to_email: email, // Email des Absenders
-                message: message
+            // 1. Email an WebSolutions senden
+            emailjs.send("service_6rczoex", "template_bnv5z4o", {
+                from_name: name,
+                from_email: email,
+                message: message,
+                to_email: "websolutionsrafz@gmail.com"
+            })
+            .then(function(response) {
+                console.log("Email an WebSolutions gesendet:", response);
+
+                // 2. Bestätigungsmail an den Absender senden
+                return emailjs.send("service_6rczoex", "template_confirmation", {
+                    from_name: "WebSolutions Team",
+                    to_email: email, // Email des Absenders
+                    message: message
+                });
+            })
+            .then(function(response) {
+                console.log("Bestätigungsmail gesendet:", response);
+                statusMessage.textContent = "Nachricht erfolgreich gesendet! Eine Bestätigung wurde an Ihre E-Mail gesendet.";
+                statusMessage.style.color = "green";
+                document.getElementById('contact-form').reset();
+            })
+            .catch(function(error) {
+                console.error("EmailJS Fehler:", error);
+                statusMessage.textContent = "Fehler beim Senden der Nachricht. Bitte versuchen Sie es später erneut.";
+                statusMessage.style.color = "red";
             });
-        })
-        .then(function(response) {
-            statusMessage.textContent = "Nachricht erfolgreich gesendet! Eine Bestätigung wurde an Ihre E-Mail gesendet.";
-            statusMessage.style.color = "green";
-            document.getElementById('contact-form').reset();
-        })
-        .catch(function(error) {
-            statusMessage.textContent = "Fehler beim Senden der Nachricht. Bitte versuchen Sie es später erneut.";
-            statusMessage.style.color = "red";
-            console.error("EmailJS Fehler:", error);
         });
     });
 </script>
+
 
 </body>
 </html>
