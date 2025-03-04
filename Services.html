@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Me - Websolutions</title>
     <script src="https://cdn.tailwindcss.com"></script>
-<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
     <style>
         :root {
             --bg-color: #f7fafc; /* Helles Grau für den Hintergrund */
@@ -58,29 +57,28 @@
         <div class="flex justify-center mt-10">
         </div>
 
-<div class="flex-grow">
-    <nav class="bg-transparent py-4">
-        <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row sm:items-center sm:justify-center">
-            <button id="menu-toggle" class="sm:hidden text-gray-800 focus:outline-none">☰</button>
-            <ul id="menu" class="hidden sm:flex flex-col sm:flex-row sm:items-center sm:space-x-6 text-center mt-4 sm:mt-0">
-                <li><a href="index.html" class="block px-6 py-3 rounded-lg text-gray-800 hover:bg-gray-400 transition">Home</a></li>
-                <li><a href="About-Us.html" class="block px-6 py-3 rounded-lg text-gray-800 hover:bg-gray-400 transition">About-Us</a></li>
-                <li><a href="Services.html" class="block px-6 py-3 rounded-lg text-gray-800 font-bold hover:bg-gray-400 transition">Services</a></li>
-                <li><a href="Pricing.html" class="block px-6 py-3 rounded-lg text-gray-800 hover:bg-gray-400 transition">Pricing</a></li>
-                <li><a href="Contact.html" class="block px-6 py-3 rounded-lg text-gray-800 hover:bg-gray-400 transition">Contact</a></li>
-                <li><a href="Imprint.html" class="block px-6 py-3 rounded-lg text-gray-800 hover:bg-gray-400 transition">Imprint</a></li>
-            </ul>
+        <div class="flex-grow">
+            <nav class="bg-transparent py-4">
+                <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row sm:items-center sm:justify-center">
+                    <button id="menu-toggle" class="sm:hidden text-gray-800 focus:outline-none">☰</button>
+                    <ul id="menu" class="hidden sm:flex flex-col sm:flex-row sm:items-center sm:space-x-6 text-center mt-4 sm:mt-0">
+                        <li><a href="index.html" class="block px-6 py-3 rounded-lg text-gray-800 hover:bg-gray-400 transition">Home</a></li>
+                        <li><a href="About-Us.html" class="block px-6 py-3 rounded-lg text-gray-800 hover:bg-gray-400 transition">About-Us</a></li>
+                        <li><a href="Services.html" class="block px-6 py-3 rounded-lg text-gray-800 font-bold hover:bg-gray-400 transition">Services</a></li>
+                        <li><a href="Pricing.html" class="block px-6 py-3 rounded-lg text-gray-800 hover:bg-gray-400 transition">Pricing</a></li>
+                        <li><a href="Contact.html" class="block px-6 py-3 rounded-lg text-gray-800 hover:bg-gray-400 transition">Contact</a></li>
+                        <li><a href="Imprint.html" class="block px-6 py-3 rounded-lg text-gray-800 hover:bg-gray-400 transition">Imprint</a></li>
+                    </ul>
+                </div>
+            </nav>
         </div>
-    </nav>
-</div>
-
 
         <div class="flex justify-center mt-10">
             <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md sm:max-w-lg lg:max-w-xl border border-gray-300 transition-all transform hover:scale-105 hover:shadow-2xl hover:border-gray-500">
                 <p class="text-xl font-bold text-gray-800">Our Services – What We Offer</p>
                 <p class="mt-2 text-gray-600">At WebSolutions, we create custom, professional, and mobile-friendly websites tailored to your needs.</p>
                 <p class="mt-2 text-gray-600">Whether you're a small business, freelancer, or organization, we ensure your online presence is modern, user-friendly, and SEO-optimized.</p>
-        
+                
                 <p class="mt-4 text-lg font-semibold text-gray-800">💡 Website Development</p>
                 <p class="mt-1 text-gray-600">✅ Custom design – No templates, fully tailored to your brand</p>
                 <p class="text-gray-600">✅ Mobile-friendly & responsive – Perfect display on all devices</p>
@@ -94,31 +92,32 @@
                 <p class="mt-4 text-lg font-semibold text-gray-800">🌐 Domain & Hosting</p>
                 <p class="mt-1 text-gray-600">✅ Domain registration – Get the perfect domain for your business</p>
                 <p class="text-gray-600">✅ Reliable hosting – Available as an extra service based on your needs</p>
+
+                <p class="mt-4 text-lg font-semibold text-gray-800">📞 Free Consultation</p>
+                <p class="mt-1 text-gray-600">✅ Schedule a free consultation via Teams or in person to discuss your project requirements and how we can help.</p>
             </div>
         </div>
-        
 
-      
+        <footer class="footer text-center py-4 text-gray-600 w-full mt-auto">
+            📧 Email: <a href="mailto:michael.eaton@siemens.com" class="text-blue-500 hover:underline">michael.eaton212@gmail.com</a>
+        </footer>
 
-    <footer class="footer text-center py-4 text-gray-600 w-full mt-auto">
-        📧 Email: <a href="mailto:michael.eaton@siemens.com" class="text-blue-500 hover:underline">michael.eaton212@gmail.com</a>
-    </footer>
+        <script>
+            document.getElementById('menu-toggle').addEventListener('click', function() {
+                document.getElementById('menu').classList.toggle('hidden');
+            });
 
-    <script>
-        document.getElementById('menu-toggle').addEventListener('click', function() {
-            document.getElementById('menu').classList.toggle('hidden');
-        });
+            const cursor = document.getElementById("cursor");
 
-        const cursor = document.getElementById("cursor");
+            document.addEventListener("mousemove", (e) => {
+                cursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+            });
 
-        document.addEventListener("mousemove", (e) => {
-            cursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
-        });
-
-        document.querySelectorAll(".nav-link, .bg-white").forEach((el) => {
-            el.addEventListener("mouseenter", () => cursor.classList.add("hovered"));
-            el.addEventListener("mouseleave", () => cursor.classList.remove("hovered"));
-        });
-    </script>
+            document.querySelectorAll(".nav-link, .bg-white").forEach((el) => {
+                el.addEventListener("mouseenter", () => cursor.classList.add("hovered"));
+                el.addEventListener("mouseleave", () => cursor.classList.remove("hovered"));
+            });
+        </script>
+    </div>
 </body>
 </html>
