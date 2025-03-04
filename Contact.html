@@ -104,56 +104,55 @@ Fill out the form below, and we will get back to you as soon as possible. Whethe
         📧 Email: <a href="mailto:websolutionsrafz@gmail.com" class="text-blue-500 hover:underline">websolutionsrafz@gmail.com</a>
     </footer>
 
-  <script>
-        document.getElementById('menu-toggle').addEventListener('click', function() {
-            document.getElementById('menu').classList.toggle('hidden');
+<script>
+    document.getElementById('menu-toggle').addEventListener('click', function() {
+        document.getElementById('menu').classList.toggle('hidden');
+    });
+
+    const cursor = document.getElementById("cursor");
+
+    document.addEventListener("mousemove", (e) => {
+        cursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+    });
+
+    document.querySelectorAll(".nav-link, .bg-white").forEach((el) => {
+        el.addEventListener("mouseenter", () => cursor.classList.add("hovered"));
+        el.addEventListener("mouseleave", () => cursor.classList.remove("hovered"));
+    });
+
+    // EmailJS Integration
+    (function() {
+        emailjs.init("PqPY56nEQgsXhzvaJ"); // Ersetze mit deinem Public Key
+    })();
+
+    document.getElementById('contact-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const statusMessage = document.getElementById("status-message");
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const message = document.getElementById('message').value;
+
+        if (!name || !email || !message) {
+            statusMessage.textContent = "Please fill out all fields.";
+            statusMessage.style.color = "red";
+            return;
+        }
+
+        emailjs.send("service_6rczoex", "template_bnv5z4o", {
+            from_name: name,
+            from_email: email,
+            message: message
+        })
+        .then(function(response) {
+            statusMessage.textContent = "Message sent successfully!";
+            statusMessage.style.color = "green";
+            document.getElementById('contact-form').reset();
+        }, function(error) {
+            statusMessage.textContent = "Failed to send message. Try again later.";
+            statusMessage.style.color = "red";
+            console.error("EmailJS Error:", error);
         });
+    });
+</script>
 
-        const cursor = document.getElementById("cursor");
-
-        document.addEventListener("mousemove", (e) => {
-            cursor.style.transform = translate(${e.clientX}px, ${e.clientY}px);
-        });
-
-        document.querySelectorAll(".nav-link, .bg-white").forEach((el) => {
-            el.addEventListener("mouseenter", () => cursor.classList.add("hovered"));
-            el.addEventListener("mouseleave", () => cursor.classList.remove("hovered"));
-        });
-
-        // EmailJS Integration
-        (function() {
-            emailjs.init("PqPY56nEQgsXhzvaJ"); // Ersetze mit deinem Public Key
-        })();
-
-        document.getElementById('contact-form').addEventListener('submit', function(event) {
-            event.preventDefault();
-
-            const statusMessage = document.getElementById("status-message");
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const message = document.getElementById('message').value;
-
-            if (!name || !email || !message) {
-                statusMessage.textContent = "Please fill out all fields.";
-                statusMessage.style.color = "red";
-                return;
-            }
-
-            emailjs.send("service_6rczoex", "template_bnv5z4o", {
-                from_name: name,
-                from_email: email,
-                message: message
-            })
-            .then(function(response) {
-                statusMessage.textContent = "Message sent successfully!";
-                statusMessage.style.color = "green";
-                document.getElementById('contact-form').reset();
-            }, function(error) {
-                statusMessage.textContent = "Failed to send message. Try again later.";
-                statusMessage.style.color = "red";
-                console.error("EmailJS Error:", error);
-            });
-        });
-    </script>
-</body>
-</html>
