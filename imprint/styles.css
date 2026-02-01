@@ -1,0 +1,64 @@
+@import url("../home/styles.css");
+
+/* Standalone page should scroll normally (override home page inner-scroller rules) */
+html { overflow: auto; }
+body {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Match the standalone Contact layout (centered glass card) */
+.imprint-standalone{
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  padding-top: clamp(5.5rem, 10vh, 7.5rem);
+  padding-bottom: clamp(2.25rem, 6vh, 3.5rem);
+}
+
+.imprint-standalone > .page-content{
+  width: 100%;
+  padding-top: 0;
+}
+
+.imprint-standalone .outer-container{
+  width: 100%;
+  align-items: center;
+}
+
+.imprint-head{
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.imprint-head .services-eyebrow{ justify-content: center; }
+
+.imprint-card .step-default{
+  padding: 2.25rem 2.75rem;
+}
+
+.imprint-prose{
+  margin-top: 0.75rem;
+  color: rgba(255,255,255,0.78);
+  line-height: 1.75;
+  font-size: 1.02rem;
+}
+
+.imprint-prose h2{
+  margin-top: 1.35rem;
+  font-size: 1.15rem;
+  color: rgba(255,255,255,0.92);
+}
+
+.imprint-prose p{ margin-top: 0.6rem; }
+
+.imprint-prose a{ color: rgba(255,255,255,0.92); font-weight: 800; }
+
+/* When embedded in an iframe (?embed=1), hide nav + lang switch */
+body.is-embed .language-button,
+body.is-embed [data-embed-hide] { display: none !important; }
+
+body.is-embed .imprint-standalone{
+  padding-top: 2.25rem;
+}

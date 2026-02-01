@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact us | Websolutions</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../partials/navbar.css" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app app-dark">
+    <div class="language-button">
+      <div class="select-wrap">
+        <div class="lang-btn"><span id="lang-label">Deutsch</span></div>
+        <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512" class="arrow">
+          <path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path>
+        </svg>
+        <div class="options">
+          <div class="option" data-locale="de"><span>Deutsch</span></div>
+          <div class="option" data-locale="en-US"><span>English</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="navbar-container" data-embed-hide>
+      <nav class="navbar-pill" role="navigation" aria-label="Main navigation">
+        <a class="nav-link" href="../home/index.html">Home</a>
+        <a class="nav-link" href="../pricing/index.html">Pricing</a>
+        <a class="nav-link" href="../seo-geo/index.html">SEO &amp; GEO</a>
+        <a class="nav-link active" href="../contact/index.html" aria-current="page">Contact us</a>
+        <a class="nav-link" href="../imprint/index.html">Imprint</a>
+      </nav>
+    </div>
+
+    <main class="page-content">
+      <section class="contact-standalone">
+        <div class="page-content">
+          <header class="contact-head">
+            <div class="services-eyebrow">Contact us</div>
+            <h1 class="hero-title">Contact us</h1>
+            <p class="services-sub">Kurzes Briefing reicht – wir melden uns schnell.</p>
+          </header>
+
+          <div class="outer-container">
+            <div class="step-circle-container contact-form-card">
+              <div class="step-default">
+                <h3>Contact us</h3>
+                <p class="muted">Kurzes Briefing reicht – wir melden uns schnell.</p>
+                <p class="muted">E-Mail: info@websolutions.ch</p>
+
+                <form class="contact-form" id="contact-form" novalidate>
+                  <label>
+                    <span class="muted">Name</span>
+                    <input class="text-input" id="name" name="name" type="text" placeholder="Ihr Name" autocomplete="name" required />
+                  </label>
+
+                  <label>
+                    <span class="muted">E-Mail</span>
+                    <input class="text-input" id="email" name="email" type="email" placeholder="name@email.ch" autocomplete="email" required />
+                  </label>
+
+                  <label>
+                    <span class="muted">Nachricht</span>
+                    <textarea class="text-input text-area" id="message" name="message" rows="6" placeholder="Worum geht’s? (z.B. neue Website, SEO & GEO, Wartung …)" required></textarea>
+                  </label>
+
+                  <div class="contact-status" id="status-message" aria-live="polite"></div>
+
+                  <div class="contact-form-actions">
+                    <button class="next-button" id="contactSendBtn" type="submit">Senden</button>
+                  </div>
+                </form>
+
+                <p class="muted" style="margin-top: 14px;">Oder direkt: <a href="mailto:info@websolutions.ch" style="color: rgba(255,255,255,0.95); font-weight: 800;">info@websolutions.ch</a></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <script src="script.js"></script>
+  <script src="../partials/cookie-consent.js"></script>
+</body>
+</html>

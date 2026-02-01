@@ -1,434 +1,257 @@
 <!DOCTYPE html>
-<html lang="de" data-theme="dark">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Websolutions Rafz – Home</title>
-  <link rel="icon" href="logo.png" type="image/x-icon">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet"/>
-  <script src="https://cdn.jsdelivr.net/npm/tsparticles@3.0.3/tsparticles.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/typeit@8.7.1/dist/typeit.min.js"></script>
-
+  <!-- Preload Inter font for instant rendering -->
+  <link rel="preload" href="https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTcviYwY.woff2" as="font" type="font/woff2" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@900&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Websoloutions - Redirecting...</title>
 
   <style>
-    html
-     { scroll-behavior: smooth; }
-    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* Global smooth scrolling */
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
-      font-family: 'Segoe UI', sans-serif;
-      color: #000000;
-      transition: background-color 0.3s, color 0.3s;
-      cursor: none;
-    }
-
-    [data-theme="light"] p, [data-theme="light"] ul, [data-theme="light"] li,
-    [data-theme="light"] h1, [data-theme="light"] h2, [data-theme="light"] h3,
-    [data-theme="light"] button { color: #000000 !important; }
-
-    [data-theme="dark"] body { color: #ffffff; }
-
-    [data-theme="dark"] p, [data-theme="dark"] ul, [data-theme="dark"] li,
-    [data-theme="dark"] h1, [data-theme="dark"] h2, [data-theme="dark"] h3,
-    [data-theme="dark"] button { color: white !important; }
-
-    a, button { cursor: none !important; }
-    input, textarea { caret-color: transparent; }
-
-    #cursor {
-      width: 16px;
-      height: 16px;
-      background-color: rgba(30, 41, 59, 0.7);
-      border-radius: 9999px;
-      position: fixed;
-      pointer-events: none;
-      transform: translate(-50%, -50%);
-      transition: width 0.2s, height 0.2s, transform 0.05s ease-out;
-      z-index: 9999;
-    }
-
-    [data-theme="dark"] #cursor {
-      background-color: rgba(255, 255, 255, 0.8);
-    }
-
-    .hovered {
-      width: 30px !important;
-      height: 30px !important;
-      background-color: rgba(30, 41, 59, 0.8) !important;
-    }
-
-    .switch {
-      display: block;
-      --width-of-switch: 3.5em;
-      --height-of-switch: 2em;
-      --size-of-icon: 1.4em;
-      --slider-offset: 0.3em;
-      position: relative;
-      width: var(--width-of-switch);
-      height: var(--height-of-switch);
-    }
-
-    .switch input { opacity: 0; width: 0; height: 0; }
-
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background-color: #f4f4f5;
-      transition: 0.4s;
-      border-radius: 30px;
-    }
-
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: var(--size-of-icon);
-      width: var(--size-of-icon);
-      border-radius: 20px;
-      left: var(--slider-offset);
-      top: 50%;
-      transform: translateY(-50%);
-      background: linear-gradient(40deg, #ff0080, #ff8c00 70%);
-      transition: 0.4s;
-    }
-
-    input:checked + .slider {
-      background-color: #303136;
-    }
-
-    input:checked + .slider:before {
-      left: calc(100% - (var(--size-of-icon) + var(--slider-offset)));
-      background: #303136;
-      box-shadow: inset -3px -2px 5px -2px #8983f7, inset -10px -4px 0 0 #a3dafb;
-    }
-
-    .background-gradient {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
-      z-index: -2;
-      transition: background 0.3s;
-    }
-
-    [data-theme="dark"] .background-gradient {
-      background: linear-gradient(135deg, #1e293b, #0f172a);
-    }
-
-    .noise-overlay {
-      content: '';
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background-image: url('https://www.transparenttextures.com/patterns/asfalt-dark.png');
-      opacity: 0.05;
-      z-index: -1;
-      pointer-events: none;
-    }
-
-    .bg-light, .bg-dark { background-color: transparent; }
-
-    #tsparticles {
-      position: fixed;
-      width: 100%;
-      height: 100%;
-      z-index: -10;
-    }
-
-    .loader-container {
+      font-family: 'Inter', Arial, system-ui, sans-serif;
+      background: #e6e6e6;
+      color: #222;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 10em;
-      perspective: 800px;
+      min-height: 100vh;
+      text-align: center;
+
+      /* Better momentum scrolling on iOS */
+      -webkit-overflow-scrolling: touch;
     }
 
-    
-    #cursor-text {
-  transform: translate(-50%, -50%);
-  white-space: nowrap;
-}
+    .loader {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+    }
 
-    #cursor-text {
-  font-size: 12px;
-  padding: 2px 6px;
-  background-color: rgba(0, 0, 0, 0.5);
-  border-radius: 6px;
-  backdrop-filter: blur(4px);
-}
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
 
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
 
-   
-.chat-input-wrapper:hover {
-  box-shadow: 0 0 0 2px rgba(0,0,0,0.1);
-}
-.chat-input-wrapper:focus-within {
-  box-shadow: 0 0 0 2px rgba(59,130,246,0.5);
-  transform: scale(1.03);
-}
+    h1 {
+      font-size: 2rem;
+      font-weight: 600;
+    }
 
-[data-tooltip]::after {
-    content: attr(data-tooltip);
-    position: absolute;
-    top: calc(100% + 8px);
-    left: 50%;
-    transform: translateX(-50%) scale(0.95);
-    background-color: white;
-    color: black;
-    padding: 8px 14px;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 500;
-    white-space: nowrap;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-    opacity: 0;
-    transition: all 0.2s ease;
-    pointer-events: none;
-    z-index: 50;
-  }
+    p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+  </style>
 
-  [data-tooltip]:hover::after {
-    opacity: 1;
-    transform: translateX(-50%) scale(1);
-  }
-
-  [data-tooltip]::before {
-    content: "";
-    position: absolute;
-    top: calc(100% + 4px);
-    left: 50%;
-    transform: translateX(-50%);
-    border-width: 6px;
-    border-style: solid;
-    border-color: white transparent transparent transparent;
-    opacity: 0;
-    transition: opacity 0.2s ease;
-    z-index: 49;
-  }
-
-  [data-tooltip]:hover::before {
-    opacity: 1;
-  }
-  .me{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 20px;
-
-  }
-
+  <style>
+    /* Navbar offset if this stylesheet is reused */
+    nav,
+    .navbar,
+    header,
+    .site-nav {
+      margin-top: 1rem;
+      position: relative;
+      top: 0;
+    }
   </style>
 </head>
-
-
 <body>
 
-
-  <div id="cursor-text" class="fixed text-sm font-semibold text-white pointer-events-none z-[9999] transition-opacity duration-200 opacity-0"></div>
-  <div id="tsparticles"></div>
-  <div class="background-gradient"></div>
-  <div class="noise-overlay"></div>
-  <div id="cursor"></div>
-
-<!-- Navbar -->
-<nav class="fixed top-0 left-0 w-full z-50 backdrop-blur shadow-sm bg-light dark:bg-dark">
-  <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
-    <div class="flex items-center gap-2">
-      <h1 class="text-xl font-bold">Websolutions Rafz</h1>
-      <div
-  class="relative inline-flex items-center justify-center p-2 cursor-pointer rounded-md "
-  data-tooltip="Located in Switzerland"
->
-  <img src="swissflag.png" alt="Swiss Flag" class="w-6 h-6" />
-</div>
-
+  <!-- Intro Overlay (Marquee) -->
+  <div id="introOverlay" tabindex="0" aria-label="Intro Overlay">
+    <div id="marqueeRows">
+      <div class="marquee-row"><div class="marquee-track" data-text="Make your business visible">Make your business visible&nbsp;&nbsp;Make your business visible</div></div>
+      <div class="marquee-row"><div class="marquee-track" data-text="Make your business visible">Make your business visible&nbsp;&nbsp;Make your business visible</div></div>
+      <div class="marquee-row"><div class="marquee-track" data-text="Make your business visible">Make your business visible&nbsp;&nbsp;Make your business visible</div></div>
     </div>
-    
-
-    
-
-    <!-- Navigation -->
-    <div class="flex items-center space-x-6">
-      <!-- Desktop Navigation -->
-      <ul class="hidden sm:flex space-x-4">
-        <li><a href="index.html" class="nav-link text-blue-500 font-bold"><i data-lucide="home"></i></a></li>
-        <li><a href="About-Us.html" class="nav-link hover:text-blue-500 transition"><i data-lucide="user"></i></a></li>
-        <li><a href="Services.html" class="nav-link hover:text-blue-500 transition"><i data-lucide="briefcase"></i></a></li>
-        <li><a href="Pricing.html" class="nav-link hover:text-blue-500 transition"><i data-lucide="calendar"></i></a></li>
-        <li><a href="Contact.html" class="nav-link hover:text-blue-500 transition"><i data-lucide="mail"></i></a></li>
-        <li><a href="Imprint.html" class="nav-link hover:text-blue-500 transition"><i data-lucide="file-text"></i></a></li>
-        
-      </ul>
-      
-      <!-- Dark Mode Toggle -->
-      <label class="switch">
-        <input type="checkbox" id="dark-toggle" />
-        <span class="slider"></span>
-      </label>
-
-      <!-- Mobile Navigation Toggle -->
-      <div class="sm:hidden relative">
-        <button id="menu-toggle" class="text-blue-500 focus:outline-none">
-          <i data-lucide="menu" class="w-6 h-6"></i>
-        </button>
-
-        <div id="mobile-menu" class="absolute right-0 top-12 w-48 bg-light dark:bg-dark border border-slate-700 rounded-xl shadow-lg opacity-0 scale-95 pointer-events-none transition-all duration-200 ease-out">
-          <ul class="flex flex-col text-center">
-            <li><a href="index.html" class="block px-4 py-2 hover:bg-slate-200 dark:hover:bg-slate-700">Home</a></li>
-            <li><a href="About-Us.html" class="block px-4 py-2 hover:bg-slate-200 dark:hover:bg-slate-700">About-Us</a></li>
-            <li><a href="Services.html" class="block px-4 py-2 hover:bg-slate-200 dark:hover:bg-slate-700">Services</a></li>
-            <li><a href="Pricing.html" class="block px-4 py-2 hover:bg-slate-200 dark:hover:bg-slate-700">Pricing</a></li>
-            <li><a href="Contact.html" class="block px-4 py-2 hover:bg-slate-200 dark:hover:bg-slate-700">Contact</a></li>
-            <li><a href="Imprint.html" class="block px-4 py-2 hover:bg-slate-200 dark:hover:bg-slate-700">Imprint</a></li>
-          </ul>
-          
-          
-        </div>
-      </div>
+    <div id="glassCursor"></div>
+  </div>
+  <div id="siteContent" style="visibility:hidden;opacity:0;pointer-events:none;">
+    <div class="loader">
+      <div class="spinner"></div>
+      <h1>Websoloutions</h1>
+      <p>Redirecting to home page...</p>
     </div>
   </div>
-</nav>
-
-<script>
-  const menuToggle = document.getElementById("menu-toggle");
-  const mobileMenu = document.getElementById("mobile-menu");
-
-  menuToggle.addEventListener("click", () => {
-    const isOpen = !mobileMenu.classList.contains("opacity-0");
-    if (isOpen) {
-      mobileMenu.classList.add("opacity-0", "scale-95", "pointer-events-none");
-      mobileMenu.classList.remove("opacity-100", "scale-100", "pointer-events-auto");
-    } else {
-      mobileMenu.classList.remove("opacity-0", "scale-95", "pointer-events-none");
-      mobileMenu.classList.add("opacity-100", "scale-100", "pointer-events-auto");
+  <style>
+    #introOverlay {
+      position: fixed; inset: 0; z-index: 9999;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      background: none; pointer-events: auto; outline: none;
+      transition: opacity 0.5s cubic-bezier(.4,0,.2,1), filter 0.5s cubic-bezier(.4,0,.2,1), transform 0.5s cubic-bezier(.4,0,.2,1);
+      user-select: none;
     }
-  });
-
-  document.addEventListener("click", (e) => {
-    if (!menuToggle.contains(e.target) && !mobileMenu.contains(e.target)) {
-      mobileMenu.classList.add("opacity-0", "scale-95", "pointer-events-none");
-      mobileMenu.classList.remove("opacity-100", "scale-100", "pointer-events-auto");
+    #introOverlay[aria-hidden="true"] { display: none !important; }
+    #marqueeRows { width: 100vw; max-width: 100vw; display: flex; flex-direction: column; gap: 2vw; }
+    .marquee-row {
+      width: 100vw; overflow: hidden; contain: content;
+      font-family: 'Inter', Arial, system-ui, sans-serif;
+      font-weight: 900; font-size: clamp(2.2rem, 7vw, 6.5vw);
+      color: #fff; text-transform: uppercase; line-height: 1.1;
+      opacity: 0.97; text-shadow: 0 2px 16px rgba(0,0,0,0.18);
+      will-change: contents;
     }
-  });
-</script>
+    .marquee-track {
+      display: inline-block; white-space: nowrap;
+      will-change: transform;
+      contain: content;
+      animation: marqueeAnim 16s linear infinite;
+      animation-play-state: paused;
+    }
+    .marquee-row:nth-child(2) .marquee-track { animation-duration: 13s; }
+    .marquee-row:nth-child(3) .marquee-track { animation-duration: 19s; }
+    #introOverlay[aria-hidden="false"] .marquee-track { animation-play-state: running; }
+    @keyframes marqueeAnim {
+      0% { transform: translate3d(0,0,0); }
+      100% { transform: translate3d(-50%,0,0); }
+    }
+    @media (max-width: 600px) {
+      .marquee-row { font-size: clamp(1.2rem, 8vw, 3.5rem); }
+    }
+    #glassCursor {
+      position: fixed; top: 0; left: 0; width: 60px; height: 60px;
+      border-radius: 50%; pointer-events: none;
+      background: rgba(255,255,255,0.13);
+      border: 2px solid rgba(255,255,255,0.38);
+      box-shadow: 0 2px 16px 0 rgba(82,39,255,0.10);
+      opacity: 0.98; z-index: 10000; display: none;
+      transition: transform 0.18s cubic-bezier(.4,0,.2,1), opacity 0.18s;
+    }
+    #glassCursor.ripple {
+      animation: glassRipple 0.32s cubic-bezier(.4,0,.2,1);
+    }
+    @keyframes glassRipple {
+      0% { transform: scale(1); opacity: 1; }
+      60% { transform: scale(1.18); opacity: 0.7; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    #introOverlay { cursor: none; }
+    @media (prefers-reduced-motion: reduce) {
+      .marquee-track { animation: none !important; }
+      #glassCursor { display: none !important; }
+    }
+  </style>
 
-
-
-  <!-- Hero Section -->
-  <section class="pt-28 pb-24 text-center px-6">
-    <div data-aos="fade-up">
-      <h2 class="text-5xl font-extrabold">Websolutions</h2>
-      <p class="text-xl mt-3 text-slate-300">Your Website. Your Success.</p>
-
-    </div>
-  </section>
-
-
-  <!-- Card Section -->
-  <section class="py-20 px-6">
-    <div class="flex justify-center" data-aos="fade-up">
-      <div class="bg-light dark:bg-dark border border-slate-700 rounded-xl shadow-md max-w-xl w-full p-6 hover:scale-105 transition transform">
-        <h3 class="text-2xl font-semibold">Learn about us</h3>
-        <ul class="mt-3 space-y-1 text-slate-300">
-            <li>Located in Switzerland</li>
-            <li>Over 100 satisfied customers</li>
-            <li>Qualificated Software Developers</li>            
-        </ul>
-        <a href="About-Us.html">
-          <button class="mt-5 px-5 py-2 bg-blue-600 text-white font-medium rounded-lg shadow-md hover:bg-blue-700 transition w-full">
-            Learn more
-          </button>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
- 
-  <footer class="footer text-center py-4 text-gray-600 w-full">
-    📧 Email: <a href="mailto:websolutionsrafz@gmail.com" class="text-blue-500 hover:underline">websolutionsrafz@gmail.com</a>
-</footer>
-
-  <!-- Scripts -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script>
-     AOS.init();
-  lucide.createIcons();
+    (function() {
+      const overlay = document.getElementById('introOverlay');
+      const siteContent = document.getElementById('siteContent');
+      const glassCursor = document.getElementById('glassCursor');
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      let running = true, cursorRAF, lastX = 0, lastY = 0;
 
-  // Cursor-Effekt
-  const cursor = document.getElementById("cursor");
-  document.addEventListener("mousemove", (e) => {
-    cursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
-  });
-  document.querySelectorAll("a, button, .bg-white").forEach((el) => {
-    el.addEventListener("mouseenter", () => cursor.classList.add("hovered"));
-    el.addEventListener("mouseleave", () => cursor.classList.remove("hovered"));
-  });
+      // Glass Cursor
+      function showCursor() { glassCursor.style.display = 'block'; }
+      function hideCursor() { glassCursor.style.display = 'none'; }
+      function moveCursor(x, y) {
+        lastX = x; lastY = y;
+        if (!cursorRAF) cursorRAF = requestAnimationFrame(updateCursor);
+      }
+      function updateCursor() {
+        glassCursor.style.transform = `translate3d(${lastX-30}px,${lastY-30}px,0)`;
+        cursorRAF = null;
+      }
+      function rippleCursor() {
+        glassCursor.classList.remove('ripple');
+        void glassCursor.offsetWidth;
+        glassCursor.classList.add('ripple');
+      }
 
-  // DARK MODE mit localStorage
-  const toggle = document.getElementById("dark-toggle");
-  const html = document.documentElement;
+      // Overlay Dismiss
+      function dismissOverlay() {
+        running = false;
+        overlay.style.pointerEvents = 'none';
+        overlay.style.opacity = 0;
+        overlay.style.filter = 'blur(8px)';
+        setTimeout(() => {
+          overlay.setAttribute('aria-hidden','true');
+          overlay.style.display = 'none';
+          siteContent.style.visibility = 'visible';
+          siteContent.style.opacity = 1;
+          siteContent.style.pointerEvents = 'auto';
+          removeListeners();
+          if (glassCursor && glassCursor.parentNode) glassCursor.parentNode.removeChild(glassCursor);
+          try { localStorage.setItem('introDismissed','1'); } catch(e){}
+        }, prefersReducedMotion ? 200 : 600);
+      }
 
-  // Beim Laden: Theme aus localStorage anwenden
-  const savedTheme = localStorage.getItem("theme");
-  if (savedTheme) {
-    html.setAttribute("data-theme", savedTheme);
-    toggle.checked = savedTheme === "dark";
-  }
+      // Listeners
+      function onOverlayClick(e) { if (running) dismissOverlay(); }
+      function onOverlayKey(e) {
+        if ((e.key === 'Enter' || e.key === ' ') && running) {
+          e.preventDefault(); dismissOverlay();
+        }
+      }
+      function onMouseMove(e) { if (running) moveCursor(e.clientX, e.clientY); }
+      function onMouseDown(e) { if (running) rippleCursor(); }
 
-  // Beim Umschalten speichern
-  toggle.addEventListener("change", () => {
-    const newTheme = toggle.checked ? "dark" : "light";
-    html.setAttribute("data-theme", newTheme);
-    localStorage.setItem("theme", newTheme);
-  });
+      function addListeners() {
+        overlay.addEventListener('click', onOverlayClick);
+        overlay.addEventListener('keydown', onOverlayKey);
+        if (!isTouch && !prefersReducedMotion) {
+          showCursor();
+          overlay.addEventListener('mousemove', onMouseMove);
+          overlay.addEventListener('mousedown', onMouseDown);
+          overlay.addEventListener('mouseleave', hideCursor);
+        }
+      }
+      function removeListeners() {
+        overlay.removeEventListener('click', onOverlayClick);
+        overlay.removeEventListener('keydown', onOverlayKey);
+        overlay.removeEventListener('mousemove', onMouseMove);
+        overlay.removeEventListener('mousedown', onMouseDown);
+        overlay.removeEventListener('mouseleave', hideCursor);
+        hideCursor();
+      }
 
-
-
-  // Cube drag-rotation
-  const cube = document.querySelector(".loader-cube");
-  let isDragging = false;
-  let rotationX = 0;
-  let rotationY = 0;
-  let autoRotate = true;
-  let lastX, lastY;
-
-
-
-
-const cursorText = document.getElementById("cursor-text");
-const gptButton = document.getElementById("openMichaelGPT");
-
-document.addEventListener("mousemove", (e) => {
-  cursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
-  cursorText.style.transform = `translate(${e.clientX}px, ${e.clientY - 30}px)`; // Position leicht über Cursor
-});
-
-gptButton.addEventListener("mouseenter", () => {
-  cursor.classList.add("hovered");
-  cursorText.textContent = "MichaelGPT Fragen";
-  cursorText.style.opacity = "1";
-});
-
-gptButton.addEventListener("mouseleave", () => {
-  cursor.classList.remove("hovered");
-  cursorText.textContent = "";
-  cursorText.style.opacity = "0";
-});
-new TypeIt("#typed-text", {
-  strings: ["Application Developer from Switzerland"],
-  speed: 50,
-  waitUntilVisible: true,
-  loop: false,
-}).go();
-
-
-
-
-
-
+      // Init
+      function shouldShowOverlay() {
+        try { return localStorage.getItem('introDismissed') !== '1'; } catch(e){ return true; }
+      }
+      function init() {
+        if (!shouldShowOverlay()) {
+          overlay.setAttribute('aria-hidden','true');
+          overlay.style.display = 'none';
+          siteContent.style.visibility = 'visible';
+          siteContent.style.opacity = 1;
+          siteContent.style.pointerEvents = 'auto';
+          return;
+        }
+        overlay.setAttribute('aria-hidden','false');
+        overlay.focus();
+        addListeners();
+      }
+      document.addEventListener('DOMContentLoaded', init);
+    })();
+    // Original redirect
+    setTimeout(function () {
+      window.location.href = './home/index.html';
+    }, 800);
   </script>
-  
 </body>
 </html>

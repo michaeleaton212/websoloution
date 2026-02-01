@@ -1,0 +1,36 @@
+@import url("../home/styles.css");
+
+/* Standalone page should scroll normally (override home page inner-scroller rules) */
+html { overflow: auto; }
+body {
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+/* Center the standalone contact form block vertically (no "sticking" to top) */
+.contact-standalone{
+	min-height: 100vh;
+	display: flex;
+	align-items: center;
+	box-sizing: border-box;
+	padding-top: clamp(5.5rem, 10vh, 7.5rem);
+	padding-bottom: clamp(2.25rem, 6vh, 3.5rem);
+}
+
+.contact-standalone > .page-content{
+	width: 100%;
+	padding-top: 0;
+}
+
+.contact-standalone .outer-container{
+	width: 100%;
+	align-items: center;
+}
+
+/* When embedded in an iframe (?embed=1), hide nav + lang switch to look like a section */
+body.is-embed .language-button,
+body.is-embed [data-embed-hide] { display: none !important; }
+
+body.is-embed .contact-standalone{
+	padding-top: 2.25rem;
+}
