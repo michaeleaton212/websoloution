@@ -229,11 +229,15 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   // Navbar click handlers (scroll inside .page to the target section)
+  // Only intercept in-page hash links; let normal navigation happen otherwise.
   document.querySelectorAll('.nav-link').forEach(link => {
     link.addEventListener('click', function (e) {
+      const href = this.getAttribute('href') || '';
+      if (!href.startsWith('#')) return;
+
       e.preventDefault();
 
-      const targetId = this.getAttribute('href').slice(1);
+      const targetId = href.slice(1);
       const targetElement = document.getElementById(targetId);
       const container = document.querySelector('main.page');
 

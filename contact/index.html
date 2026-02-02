@@ -46,37 +46,136 @@
             <p class="services-sub">Kurzes Briefing reicht – wir melden uns schnell.</p>
           </header>
 
+          <div class="contact-top-grid" aria-label="Schnellinfos">
+            <article class="services-feature-card contact-top-card">
+              <div class="services-feature-kicker">Antwortzeit</div>
+              <h3 class="services-feature-title">In der Regel &lt; 24h</h3>
+              <p class="services-feature-text">Du bekommst zuerst eine kurze Rückfrage oder direkt eine klare Einschätzung mit nächsten Schritten.</p>
+              <div class="services-feature-footer">
+                <span>Mo–Fr</span>
+                <span class="services-feature-arrow" aria-hidden="true">→</span>
+              </div>
+            </article>
+
+            <article class="services-feature-card contact-top-card">
+              <div class="services-feature-kicker">Direkt</div>
+              <h3 class="services-feature-title">E-Mail oder Telefon</h3>
+              <p class="services-feature-text">Wenn’s schnell gehen soll, erreichst du uns auch direkt – ohne Formular.</p>
+              <div class="services-feature-footer">
+                <a class="contact-chip" href="mailto:info@websolutions.ch">Mail</a>
+                <a class="contact-chip contact-chip--ghost" href="tel:+41794534169">Anrufen</a>
+              </div>
+            </article>
+
+            <article class="services-feature-card contact-top-card">
+              <div class="services-feature-kicker">Info</div>
+              <h3 class="services-feature-title">Was wir brauchen</h3>
+              <p class="services-feature-text">Branche, Ziel, grobe Timeline + (falls vorhanden) ein Link – mehr braucht’s für den Start nicht.</p>
+              <div class="services-feature-footer">
+                <span>1–2 Minuten</span>
+                <span class="services-feature-arrow" aria-hidden="true">→</span>
+              </div>
+            </article>
+          </div>
+
           <div class="outer-container">
-            <div class="step-circle-container contact-form-card">
-              <div class="step-default">
-                <h3>Contact us</h3>
-                <p class="muted">Kurzes Briefing reicht – wir melden uns schnell.</p>
-                <p class="muted">E-Mail: info@websolutions.ch</p>
+            <div class="contact-grid">
+              <div class="step-circle-container contact-form-card">
+                <div class="step-default">
+                  <h3>Contact us</h3>
+                  <p class="muted">Kurzes Briefing reicht – wir melden uns schnell.</p>
 
-                <form class="contact-form" id="contact-form" novalidate>
-                  <label>
-                    <span class="muted">Name</span>
-                    <input class="text-input" id="name" name="name" type="text" placeholder="Ihr Name" autocomplete="name" required />
-                  </label>
-
-                  <label>
-                    <span class="muted">E-Mail</span>
-                    <input class="text-input" id="email" name="email" type="email" placeholder="name@email.ch" autocomplete="email" required />
-                  </label>
-
-                  <label>
-                    <span class="muted">Nachricht</span>
-                    <textarea class="text-input text-area" id="message" name="message" rows="6" placeholder="Worum geht’s? (z.B. neue Website, SEO & GEO, Wartung …)" required></textarea>
-                  </label>
-
-                  <div class="contact-status" id="status-message" aria-live="polite"></div>
-
-                  <div class="contact-form-actions">
-                    <button class="next-button" id="contactSendBtn" type="submit">Senden</button>
+                  <div class="contact-highlights" aria-label="Kontakt Infos">
+                    <div class="contact-highlight">
+                      <div class="contact-highlight-k">Antwortzeit</div>
+                      <div class="contact-highlight-v">in der Regel &lt; 24h</div>
+                    </div>
+                    <div class="contact-highlight">
+                      <div class="contact-highlight-k">E-Mail</div>
+                      <div class="contact-highlight-v"><a href="mailto:info@websolutions.ch">info@websolutions.ch</a></div>
+                    </div>
+                    <div class="contact-highlight">
+                      <div class="contact-highlight-k">Telefon</div>
+                      <div class="contact-highlight-v"><a href="tel:+41794534169">+41 79 453 41 69</a></div>
+                    </div>
+                    <div class="contact-highlight">
+                      <div class="contact-highlight-k">Standort</div>
+                      <div class="contact-highlight-v">Schweiz / remote</div>
+                    </div>
                   </div>
-                </form>
 
-                <p class="muted" style="margin-top: 14px;">Oder direkt: <a href="mailto:info@websolutions.ch" style="color: rgba(255,255,255,0.95); font-weight: 800;">info@websolutions.ch</a></p>
+                  <form class="contact-form" id="contact-form" novalidate>
+                    <label>
+                      <span class="muted">Name</span>
+                      <input class="text-input" id="name" name="name" type="text" placeholder="Ihr Name" autocomplete="name" required />
+                    </label>
+
+                    <label>
+                      <span class="muted">E-Mail</span>
+                      <input class="text-input" id="email" name="email" type="email" placeholder="name@email.ch" autocomplete="email" required />
+                    </label>
+
+                    <label>
+                      <span class="muted">Nachricht</span>
+                      <textarea class="text-input text-area" id="message" name="message" rows="6" placeholder="Worum geht’s? (z.B. neue Website, SEO & GEO, Wartung …)" required></textarea>
+                    </label>
+
+                    <div class="contact-status" id="status-message" aria-live="polite"></div>
+
+                    <div class="contact-form-actions">
+                      <button class="next-button" id="contactSendBtn" type="submit">Senden</button>
+                    </div>
+
+                    <p class="contact-privacy-note">Mit dem Absenden stimmst du zu, dass wir deine Angaben zur Beantwortung der Anfrage verarbeiten (keine Weitergabe; nur Kontaktzweck).</p>
+                  </form>
+                </div>
+              </div>
+
+              <aside class="step-circle-container contact-side-card" aria-label="So läuft es ab">
+                <div class="step-default">
+                  <h3>So läuft es ab</h3>
+                  <p class="muted">Klarer Ablauf – ohne Ping-Pong.</p>
+
+                  <ul class="contact-bullets">
+                    <li><strong>1.</strong> Du schickst kurz dein Ziel &amp; Kontext.</li>
+                    <li><strong>2.</strong> Wir melden uns mit 1–2 Rückfragen.</li>
+                    <li><strong>3.</strong> Du bekommst ein klares Angebot + Timeline.</li>
+                  </ul>
+
+                  <div class="contact-faq" aria-label="FAQ">
+                    <details>
+                      <summary>Was soll ich in die Nachricht schreiben?</summary>
+                      <div class="contact-faq-body">Reicht: Branche, Ziel (z.B. neue Website / SEO), Deadline und ein Link (falls vorhanden).</div>
+                    </details>
+                    <details>
+                      <summary>Kann ich auch nur SEO/GEO buchen?</summary>
+                      <div class="contact-faq-body">Ja – wir können SEO/GEO auch unabhängig von einem Redesign umsetzen.</div>
+                    </details>
+                    <details>
+                      <summary>Wie schnell geht’s los?</summary>
+                      <div class="contact-faq-body">Oft innerhalb weniger Tage – je nach Umfang und aktueller Auslastung.</div>
+                    </details>
+                  </div>
+
+                  <div class="contact-cta">
+                    <a class="contact-mail" href="mailto:info@websolutions.ch">Oder direkt mailen →</a>
+                  </div>
+                </div>
+              </aside>
+            </div>
+
+            <div class="contact-bottom">
+              <div class="step-circle-container contact-bottom-card" aria-label="Kontakt CTA">
+                <div class="step-default">
+                  <div class="contact-bottom-inner">
+                    <h3>Lieber kurz &amp; konkret?</h3>
+                    <p class="muted">Schick uns Ziel + Link (falls vorhanden). Wir melden uns mit einer klaren Einschätzung.</p>
+                    <div class="contact-bottom-actions">
+                      <a class="hero-cta" href="mailto:info@websolutions.ch">E-Mail schreiben</a>
+                      <a class="hero-cta hero-cta--ghost" href="tel:+41794534169">Anrufen</a>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
