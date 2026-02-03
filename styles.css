@@ -501,7 +501,7 @@ body.scrolling::-webkit-scrollbar-thumb {
 .imprint-home-chip{
   display: inline-flex;
   align-items: center;
-  padding: 10px 12px;
+  padding: 6px 12px;
   border-radius: 999px;
   text-decoration: none;
   font-weight: 900;
@@ -806,6 +806,43 @@ body.scrolling::-webkit-scrollbar-thumb {
   color: rgba(255,255,255,0.72);
 }
 
+.hero-offer-row{
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.hero-offer-pill{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+}
+
+.hero-offer-text{
+  font-size: 0.98rem;
+  color: rgba(255,255,255,0.74);
+  line-height: 1.5;
+}
+
+
+
+@media (max-width: 520px){
+  .hero-offer-text{ font-size: 0.95rem; }
+}
+
 .hero-title{
   margin-top: 14px;
   font-size: clamp(2.3rem, 4.3vw, 4.1rem);
@@ -861,6 +898,75 @@ body.scrolling::-webkit-scrollbar-thumb {
 .hero-cta--ghost:hover{
   background: rgba(255,255,255,0.10);
   border-color: rgba(255,255,255,0.20);
+}
+
+/* =====================
+   UNIFIED BUTTON STYLE (EXCEPT NAV + SEND/WEITER)
+   ===================== */
+/* Apply the requested button look to most buttons/CTAs.
+   Exclusions:
+   - Navbar links (.nav-link)
+   - Stepper/Form controls (.next-button = Weiter/Senden, .back-button = Zurück)
+*/
+
+/* Base (shared) */
+a.hero-cta,
+a.contact-mail,
+button:not(.next-button):not(.back-button){
+  position: relative;
+  display: inline-block;
+  padding: 12px 22px;
+  text-align: center;
+  font-size: 16px;
+  letter-spacing: 0.9px;
+  text-decoration: none;
+  color: #fff;
+  cursor: pointer;
+  border: 2px solid #fff;
+  border-radius: 10px;
+}
+
+/* Primary (Book Room style) */
+a.hero-cta:not(.hero-cta--ghost),
+a.contact-mail{
+  background: rgba(79, 79, 79, 0.4);
+  backdrop-filter: blur(12px) saturate(180%);
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1),
+              inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+a.hero-cta:not(.hero-cta--ghost):hover,
+a.contact-mail:hover{
+  background: rgba(156, 156, 156, 0.23);
+  border-color: #fff;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2),
+              inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+a.hero-cta:not(.hero-cta--ghost):active,
+a.contact-mail:active{
+  transform: translateY(0);
+}
+
+/* Secondary (Check-in style) */
+a.hero-cta.hero-cta--ghost{
+  background: transparent;
+  transition: ease-out 0.5s;
+  box-shadow: inset 0 0 0 0 #725AC1;
+}
+
+a.hero-cta.hero-cta--ghost:hover{
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #fff;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2),
+              inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+a.hero-cta.hero-cta--ghost:active{
+  transform: translateY(0);
 }
 
 /* =====================
