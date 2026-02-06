@@ -47,7 +47,8 @@ img, video, canvas, svg{
    HTML & BODY
    ===================== */
 html, body{
-  height: 100%;
+  height: auto;
+  min-height: 100%;
 }
 
 html{
@@ -56,8 +57,25 @@ html{
   background-attachment: fixed;
   scroll-behavior: auto !important;
   scrollbar-gutter: stable;
-  /* Home uses an inner scroller (.page). Prevent a second (outer) scrollbar on <html>. */
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-snap-type: y mandatory;
+  overscroll-behavior-y: contain;
+  /* Keep snap/anchors from hiding under the fixed navbar */
+  --snap-top: calc(env(safe-area-inset-top, 0px) + 86px);
+  scroll-padding-top: var(--snap-top);
+}
+
+/* Services: snap to the real top (no previous section peeking above).
+   We counteract html scroll-padding-top just for this section. */
+#pricing{
+  scroll-margin-top: calc(-1 * var(--snap-top));
+}
+
+/* Temporarily disable snap during programmatic smooth scrolls (navbar clicks, wheel assist)
+   to avoid a second "snap" jump after the scroll animation. */
+html.snap-disabled{
+  scroll-snap-type: none !important;
 }
 
 body {
@@ -65,7 +83,7 @@ body {
   background: radial-gradient(1200px 700px at 50% 30%, rgba(255,255,255,0.06), rgba(255,255,255,0) 60%),
               linear-gradient(180deg, var(--bg1), var(--bg0));
   background-attachment: fixed;
-  overflow: hidden;
+  overflow: visible;
   overflow-x: hidden;
   color: var(--text);
   -webkit-font-smoothing: antialiased;
@@ -92,6 +110,14 @@ body::-webkit-scrollbar-thumb {
 
 body.scrolling::-webkit-scrollbar-thumb {
   background: linear-gradient(90deg, #2196f3, #00bcd4);
+}
+
+/* Don't let the persistent swipe hint cover CTAs while typing/inside contact */
+body.is-typing #swipeHint,
+html.is-typing #swipeHint,
+body.hide-swipehint #swipeHint{
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 
 /* =====================
@@ -374,10 +400,22 @@ body.scrolling::-webkit-scrollbar-thumb {
   min-height: 100dvh;
   box-sizing: border-box;
   /* Leave space for the fixed navbar + bottom swipe hint */
-  padding-top: clamp(5.5rem, 10vh, 7.5rem);
-  padding-bottom: clamp(2.25rem, 6vh, 3.5rem);
-  display: flex;
-  align-items: center;
+  /* Scroll snapping/anchors already respect the fixed navbar via html scroll-padding-top.
+     Keep only a modest internal spacing so the form doesn't sit too low. */
+  padding-top: clamp(1.25rem, 3.5vh, 2.5rem);
+  padding-bottom: clamp(1.75rem, 5vh, 3rem);
+  display: block;
+}
+
+/* Mobile keyboard handling:
+   - iOS/Android viewport height changes can re-center flex content causing "jumping".
+   - While typing, pin the form to the top with consistent padding and reserve space for the keyboard.
+*/
+html.is-typing .contact-us-section,
+body.is-typing .contact-us-section{
+  align-items: flex-start;
+  padding-top: calc(env(safe-area-inset-top, 0px) + 92px);
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 22px + var(--kb, 0px));
 }
 
 .contact-us-section .page-content{
@@ -388,7 +426,30 @@ body.scrolling::-webkit-scrollbar-thumb {
 .contact-us-section .outer-container{
   width: 100%;
   align-items: center;
-  min-height: 100%;
+  min-height: auto;
+}
+
+/* Contact page: keep the form card visually centered + a bit narrower */
+.contact-us-section .step-circle-container{
+  max-width: 46rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.contact-us-section .contact-form-actions{
+  justify-content: center;
+}
+
+/* A bit more comfortable writing space on small screens */
+@media (max-width: 600px){
+  .contact-us-section{
+    padding-top: calc(env(safe-area-inset-top, 0px) + 92px);
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 22px);
+  }
+
+  .contact-us-section .text-area{
+    min-height: 160px;
+  }
 }
 
 .imprint-section{
@@ -543,11 +604,6 @@ body.scrolling::-webkit-scrollbar-thumb {
   gap: 10px;
 }
 
-.about-section{
-  position: relative;
-  padding: 0 24px 70px;
-}
-
 .section-lead{
   margin-top: 12px;
   max-width: 70ch;
@@ -563,17 +619,15 @@ body.scrolling::-webkit-scrollbar-thumb {
 
 .page { 
   width: 100%; 
-  min-height: 100vh;
-  min-height: 100dvh;
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  height: 100vh;
-  height: 100dvh;
-  overflow-y: auto;
+  overflow: visible;
+}
+
+/* Ensure no accidental horizontal overflow in wrappers */
+#siteContent,
+.app,
+main.page{
   overflow-x: hidden;
-  scroll-snap-type: y mandatory;
-  scroll-behavior: auto;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior-y: contain;
 }
 
 /* =====================
@@ -1671,36 +1725,35 @@ a.hero-cta.hero-cta--ghost:active{
 }
 
 /* =====================
-   ABOUT US SECTION
+   ABOUT (Home)
+   Keep consistent spacing + card styling with the rest
    ===================== */
-.about-section {
+.about-section{
   min-height: 100vh;
-  padding: 6rem 2rem 4rem;
+  padding: 6rem 24px 4rem;
   position: relative;
 }
 
-.about-section .page-content {
-  max-width: 1200px;
+.about-section .page-content{
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  gap: 22px;
+}
+
+.about-section .about-hero{
+  text-align: center;
+  max-width: 72ch;
   margin: 0 auto;
 }
 
-.about-hero {
-  text-align: center;
-  margin-bottom: 6rem;
+/* The global .section-title is used across sections; tighten just for About */
+.about-section .section-title{
+  margin-bottom: 14px;
 }
 
-.about-hero h1 {
-  font-size: clamp(2.5rem, 5vw, 4rem);
-  font-weight: 800;
-  color: #fff;
-  margin-bottom: 1rem;
-  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-}
-
-.about-hero p {
-  font-size: clamp(1rem, 2vw, 1.5rem);
-  color: rgba(255, 255, 255, 0.9);
-  font-weight: 300;
+.about-section .section-lead{
+  margin: 10px auto 0;
 }
 
 .section-title {
@@ -1712,43 +1765,53 @@ a.hero-cta.hero-cta--ghost:active{
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
 }
 
-.glass-card {
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(30px) saturate(180%);
-  -webkit-backdrop-filter: blur(30px) saturate(180%);
-  border-radius: 30px;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  padding: 3rem;
-  box-shadow: 
-    0 20px 60px rgba(0, 0, 0, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+/* About profile card: same glass feel, better proportions */
+.about-section .glass-card{
+  border-radius: var(--r);
+  padding: clamp(18px, 3vw, 32px);
 }
 
-.glass-card.large {
-  padding: 4rem 3.5rem;
+.about-section .mission-section{ margin: 0; }
+
+.about-section .mission-section h3{
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: rgba(255,255,255,0.92);
+  margin-bottom: 10px;
 }
 
-.mission-section {
-  margin-bottom: 6rem;
+.about-section .mission-section p{
+  font-size: 1rem;
+  line-height: 1.75;
+  color: rgba(255,255,255,0.86);
+  margin-top: 10px;
 }
 
-.mission-section h2 {
-  font-size: clamp(1.8rem, 3vw, 2.5rem);
-  font-weight: 700;
-  color: #fff;
-  margin-bottom: 2rem;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+.about-section .mission-section p:first-of-type{ margin-top: 14px; }
+
+.about-section .about-contact{
+  margin-top: 14px;
+  font-size: 0.92rem;
+  color: rgba(255,255,255,0.60);
 }
 
-.mission-section p {
-  font-size: clamp(1rem, 1.5vw, 1.2rem);
-  line-height: 1.8;
-  color: rgba(255, 255, 255, 0.95);
-  margin-bottom: 1.5rem;
+.about-section .about-contact-link{
+  color: rgba(255,255,255,0.68);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255,255,255,0.22);
+  padding-bottom: 1px;
+  transition: color 180ms ease, border-color 180ms ease;
 }
 
-.mission-section p:last-child {
-  margin-bottom: 0;
+.about-section .about-contact-link:hover{
+  color: rgba(255,255,255,0.86);
+  border-bottom-color: rgba(255,255,255,0.38);
+}
+
+.about-section .about-contact-link:focus-visible{
+  outline: none;
+  border-radius: 6px;
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.18);
 }
 
 .values-section {
@@ -2279,10 +2342,16 @@ a.hero-cta.hero-cta--ghost:active{
   width: 100%;
   border: 1px solid rgba(255,255,255,0.12);
   border-radius: 12px;
-  font-size: 14px;
+  font-size: 16px; /* iOS/Android: prevents input zoom on focus */
+  line-height: 1.25;
   outline: none;
   background: rgba(255,255,255,0.06);
   color: rgba(255,255,255,0.92);
+}
+
+/* Touch-friendly input height (avoid "jump" when keyboard opens) */
+input.text-input{
+  min-height: 44px;
 }
 
 .text-input::placeholder { color: rgba(255,255,255,0.45); }
@@ -2310,7 +2379,7 @@ a.hero-cta.hero-cta--ghost:active{
 }
 
 .contact-status {
-  min-height: 1.2em;
+  min-height: 2.4em; /* reserve space to avoid layout shifts on validation */
   margin-top: 0.15rem;
   font-size: 0.95rem;
 }
@@ -2346,18 +2415,11 @@ a.hero-cta.hero-cta--ghost:active{
   box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.18);
 }
 
+/* (Removed inner scroll container) main.page is now a normal flow container. */
 .page{
   width: 100%;
-  height: 100vh;             /* wichtig */
-  height: 100dvh;
-  min-height: 100vh;
-  min-height: 100dvh;
-  overflow-y: auto;          /* wichtig */
-  overflow-x: hidden;
-  scroll-snap-type: y mandatory;     /* Snap nur hier */
-  scroll-behavior: auto;             /* kein Smooth-Zeug */
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior-y: contain;
+  min-height: 100%;
+  overflow: visible;
 }
 
 /* Snap-Ziele */
@@ -2366,10 +2428,20 @@ a.hero-cta.hero-cta--ghost:active{
 .about-section,
 .seo-geo-section,
 .contact-section,
-.contact-us-section{
+.contact-us-section,
+.faq-section,
+.imprint-section{
   min-height: 100vh;
   scroll-snap-align: start;
   scroll-snap-stop: always;  /* optional, macht Snap “härter” */
+}
+
+/* Desktop: keep a small top spacing (avoid overly low placement) */
+@media (min-width: 900px){
+  .contact-us-section{
+    padding-top: clamp(1.25rem, 3vh, 2.25rem);
+    padding-bottom: clamp(2rem, 4vh, 3rem);
+  }
 }
 
 .imprint-section{
@@ -2498,13 +2570,14 @@ a.hero-cta.hero-cta--ghost:active{
   .contact-section{ padding: 4.75rem 0; }
 
   /* Scroll snap feels too aggressive on iPhone */
-  .page{ scroll-snap-type: y proximity; }
+  html{ scroll-snap-type: y proximity; }
   .hero,
   .pricing-section,
   .about-section,
   .seo-geo-section,
   .contact-section,
   .contact-us-section,
+  .faq-section,
   .imprint-section{ scroll-snap-stop: normal; }
 
   /* Contact stepper: shrink paddings */
@@ -2525,4 +2598,50 @@ a.hero-cta.hero-cta--ghost:active{
 
 .animation-mouse{
   font-size: 30px;
+}
+
+/* =====================
+   FAQ (minimal styling, keeps existing look)
+   ===================== */
+.faq-section{
+  padding: 6rem 2rem 4rem;
+}
+
+.faq-list{
+  max-width: 980px;
+  margin: 0 auto;
+  display: grid;
+  gap: 12px;
+}
+
+.faq-item{
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r);
+  backdrop-filter: var(--card-blur);
+  -webkit-backdrop-filter: var(--card-blur);
+  box-shadow: var(--card-shadow), var(--card-inner);
+  overflow: hidden;
+}
+
+.faq-item > summary{
+  list-style: none;
+  cursor: pointer;
+  padding: 16px 18px;
+  font-weight: 800;
+  color: rgba(255,255,255,0.92);
+}
+
+.faq-item > summary::-webkit-details-marker{ display: none; }
+
+.faq-answer{
+  padding: 0 18px 16px 18px;
+  color: rgba(255,255,255,0.80);
+  line-height: 1.7;
+}
+
+/* While typing in forms (mobile keyboards), disable snap to avoid "jumping" */
+html.is-typing,
+body.is-typing{
+  scroll-snap-type: none;
 }

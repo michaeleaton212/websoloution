@@ -1,13 +1,129 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="de-CH">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Home - Websolutions</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Websolutions Rafz – Webdesign, SEO &amp; GEO (Schweiz)</title>
+
+  <meta name="description" content="Websolutions in Rafz (ZH): Webdesign, technisches SEO &amp; GEO (Optimierung für KI-Suche). Schnelle, wartbare Websites inkl. Hosting, Wartung und Support." />
+  <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
+  <link rel="canonical" href="https://websolutionsrafz.ch/" />
+
+  <!-- Open Graph / Twitter Cards -->
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="de_CH" />
+  <meta property="og:site_name" content="Websolutions" />
+  <meta property="og:title" content="Websolutions Rafz – Webdesign, SEO &amp; GEO" />
+  <meta property="og:description" content="Webdesign, technisches SEO &amp; GEO (Optimierung für KI-Suche) in Rafz/Zürich/Schweiz." />
+  <meta property="og:url" content="https://websolutionsrafz.ch/" />
+  <meta property="og:image" content="https://websolutionsrafz.ch/favicon.png" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Websolutions Rafz – Webdesign, SEO &amp; GEO" />
+  <meta name="twitter:description" content="Wartbare Websites, Hosting/Wartung sowie SEO &amp; GEO in der Schweiz." />
+  <meta name="twitter:image" content="https://websolutionsrafz.ch/favicon.png" />
+
+  <meta name="theme-color" content="#0e1112" />
+
+  <!-- Performance hints -->
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link rel="dns-prefetch" href="//cdn.jsdelivr.net" />
+  <link rel="preload" href="styles.css" as="style" />
 
   <link rel="icon" type="image/png" href="favicon.png" />
 
   <link rel="stylesheet" href="styles.css" />
+
+  <!-- Structured Data (GEO/SEO): Organization + Local Business + FAQ -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://websolutionsrafz.ch/#org",
+          "name": "Websolutions",
+          "url": "https://websolutionsrafz.ch/",
+          "email": "info@websolutions.ch",
+          "telephone": "+41 79 453 41 69"
+        },
+        {
+          "@type": "ProfessionalService",
+          "@id": "https://websolutionsrafz.ch/#localbusiness",
+          "name": "Websolutions",
+          "url": "https://websolutionsrafz.ch/",
+          "email": "info@websolutions.ch",
+          "telephone": "+41 79 453 41 69",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Peterwise 3",
+            "postalCode": "8197",
+            "addressLocality": "Rafz",
+            "addressCountry": "CH"
+          },
+          "areaServed": [
+            { "@type": "AdministrativeArea", "name": "Kanton Zürich" },
+            { "@type": "Country", "name": "Schweiz" }
+          ],
+          "knowsAbout": [
+            "Webdesign",
+            "Technisches SEO",
+            "OnPage SEO",
+            "GEO (Generative Engine Optimization)",
+            "Performance-Optimierung",
+            "Hosting",
+            "Wartung"
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://websolutionsrafz.ch/#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "Was macht Websolutions konkret?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Wir erstellen und betreuen Websites (Webdesign/Entwicklung), setzen technisches SEO um und optimieren Inhalte für KI-Suche (GEO). Zusätzlich bieten wir Hosting, Wartung und Support."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Für welche Region arbeitet ihr?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Wir sitzen in Rafz (ZH) und arbeiten für Unternehmen in der Schweiz – besonders in der Region Zürich und Umgebung."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Was bedeutet GEO (Generative Engine Optimization)?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "GEO ist Optimierung für KI-Suche (z.B. ChatGPT, Perplexity, Google AI Overviews): klare Struktur, zitierfähige Aussagen, FAQs und saubere Quellen/Entitäten, damit KI-Systeme Inhalte korrekt verstehen und wiedergeben."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Bietet ihr auch Hosting und Wartung an?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Ja. Wir übernehmen Domain/SSL, Performance-Setup sowie Updates, Backups und laufende Anpassungen – damit die Website dauerhaft schnell und sicher bleibt."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Wie kann ich euch kontaktieren?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Über das Formular auf dieser Seite oder per E-Mail an info@websolutions.ch bzw. telefonisch unter +41 79 453 41 69."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  </script>
 </head>
 
 <body>
@@ -78,8 +194,9 @@
     <div class="hero-shell">
       <header class="services-head">
         <div class="services-eyebrow">Services</div>
-        <h1 class="hero-title services-title">Design Erstellung</h1>
-        <h1 class="hero-title services-title">Hosting &amp; Wartung</h1>
+        <h2 class="sr-only">Services</h2>
+        <p class="hero-title services-title">Design Erstellung</p>
+        <p class="hero-title services-title">Hosting &amp; Wartung</p>
 
         <p class="services-sub">Alles aus einer Hand: modernes Webdesign, stabiles Hosting und verlässliche Wartung – inklusive technischer SEO-Basis.</p>
       </header>
@@ -117,8 +234,6 @@
     </div>
   </div>
 </section>
-
-
 
         <!-- SEO & GEO -->
         <section class="seo-geo-section" id="seo-geo">
@@ -430,6 +545,7 @@
               <div class="step-circle-container">
                 <div class="step-default step-default--padded">
                
+                  <h2 class="sr-only">Kontaktformular</h2>
                   <h3>Schreib uns eine Nachricht</h3>
                   <p class="muted">Kurzes Briefing reicht – wir melden uns schnell.</p>
 
@@ -441,7 +557,12 @@
 
                     <label>
                       <span class="muted">E-Mail</span>
-                      <input class="text-input" id="email" name="email" type="email" placeholder="name@email.ch" autocomplete="email" required />
+                      <input class="text-input" id="email" name="email" type="email" inputmode="email" autocapitalize="none" spellcheck="false" placeholder="name@email.ch" autocomplete="email" required />
+                    </label>
+
+                    <label>
+                      <span class="muted">Telefon (optional)</span>
+                      <input class="text-input" id="phone" name="phone" type="tel" inputmode="tel" placeholder="+41 …" autocomplete="tel" />
                     </label>
 
                     <label>
@@ -462,12 +583,81 @@
           </div>
         </section>
 
+        <!-- ABOUT (GEO-friendly, zitierfähig) -->
+        <section class="about-section" id="about">
+          <div class="page-content">
+            <header class="about-hero">
+              <div class="services-eyebrow">Über uns</div>
+              <h2 class="section-title">Websolutions in Rafz (ZH)</h2>
+              <p class="section-lead">Wir bauen Websites, die schnell laden, wartbar sind und fachlich korrekt von Suchmaschinen und KI-Systemen verstanden werden. Fokus: klare Struktur, saubere Technik und nachvollziehbare Inhalte.</p>
+            </header>
+
+            <section class="mission-section glass-card" aria-label="Kurzprofil">
+              <h3>Kurzprofil</h3>
+              <p><strong>Wer:</strong> Websolutions (Rafz, Schweiz)</p>
+              <p><strong>Was:</strong> Webdesign/Entwicklung, technisches SEO, OnPage-Optimierung und GEO (Optimierung für KI-Suche)</p>
+              <p><strong>Für wen:</strong> KMU, lokale Dienstleister und B2B – wenn Sichtbarkeit und Anfragen zählen</p>
+              <p><strong>USP:</strong> Performance + strukturierte Inhalte + Wartbarkeit (kein unnötiger Overhead)</p>
+              <p class="about-contact"><a class="about-contact-link" href="#contact-us">Zum Kontaktformular</a></p>
+            </section>
+          </div>
+        </section>
+
+        <!-- FAQ (GEO/AI-Readability) -->
+        <section class="faq-section" id="faq">
+          <div class="page-content">
+            <header class="seo-geo-head">
+              <div class="seo-geo-eyebrow">FAQ</div>
+              <h2 class="section-title">Häufige Fragen</h2>
+              <p class="seo-geo-sub">Kurze Antworten, damit Menschen und KI-Systeme die Leistungen schnell einordnen können.</p>
+            </header>
+
+            <div class="faq-list" aria-label="FAQ Liste">
+              <details class="faq-item">
+                <summary>Was macht Websolutions konkret?</summary>
+                <div class="faq-answer">
+                  <p>Wir erstellen Websites (Design + Umsetzung), setzen technisches SEO um und optimieren Inhalte für KI-Suche (GEO). Zusätzlich übernehmen wir Hosting, Wartung und Support.</p>
+                </div>
+              </details>
+
+              <details class="faq-item">
+                <summary>Für welche Region arbeitet ihr?</summary>
+                <div class="faq-answer">
+                  <p>Wir sitzen in Rafz (ZH) und arbeiten für Unternehmen in der Schweiz – besonders in der Region Zürich und Umgebung.</p>
+                </div>
+              </details>
+
+              <details class="faq-item">
+                <summary>Was bedeutet GEO (Generative Engine Optimization)?</summary>
+                <div class="faq-answer">
+                  <p>GEO ist Optimierung für KI-Suche (z.B. ChatGPT, Perplexity, Google AI Overviews): klare Struktur, zitierfähige Aussagen, FAQs und saubere Entitäten/Topics, damit KI-Systeme Inhalte korrekt verstehen und wiedergeben.</p>
+                </div>
+              </details>
+
+              <details class="faq-item">
+                <summary>Bietet ihr auch Hosting und Wartung an?</summary>
+                <div class="faq-answer">
+                  <p>Ja. Wir übernehmen Domain/SSL, Performance-Setup sowie Updates, Backups und laufende Anpassungen – damit die Website dauerhaft schnell und sicher bleibt.</p>
+                </div>
+              </details>
+
+              <details class="faq-item">
+                <summary>Wie kann ich euch kontaktieren?</summary>
+                <div class="faq-answer">
+                  <p>Über das Formular auf dieser Seite oder per E-Mail an <a class="inline-link" href="mailto:info@websolutions.ch">info@websolutions.ch</a> bzw. telefonisch unter <a class="inline-link" href="tel:+41794534169">+41 79 453 41 69</a>.</p>
+                </div>
+              </details>
+            </div>
+          </div>
+        </section>
+
         <!-- IMPRINT (next page after contact) -->
         <section class="imprint-section" id="imprint">
           <div class="page-content">
             <div class="outer-container">
               <div class="step-circle-container">
                 <div class="step-default step-default--padded">
+                  <h2 class="sr-only">Impressum</h2>
                   <header class="imprint-home-head">
                     <div class="services-eyebrow">Rechtliches</div>
                     <h3 class="imprint-home-title">Imprint / Impressum</h3>
@@ -499,10 +689,12 @@
                       </ul>
 
                       <div class="imprint-home-actions">
-                        <a class="hero-cta hero-cta--ghost" href="../contact/index.html">Kontakt</a>
+                        <a class="hero-cta hero-cta--ghost" href="#contact-us">Kontakt</a>
                       </div>
                     </section>
                   </div>
+
+                  <p class="muted" style="margin-top: 14px;">Last updated: <time datetime="2026-02-05">2026-02-05</time></p>
                 </div>
               </div>
             </div>
@@ -513,7 +705,7 @@
   </div> <!-- END #siteContent wrapper -->
 
   <script src="script.js"></script>
-  <script src="../partials/cookie-consent.js"></script>
+  <script src="partials/cookie-consent.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
   <script>
@@ -527,6 +719,7 @@
 
       const nameEl = document.getElementById("name");
       const emailEl = document.getElementById("email");
+      const phoneEl = document.getElementById("phone");
       const msgEl = document.getElementById("message");
       const statusEl = document.getElementById("status-message");
       const sendBtn = document.getElementById("homeContactSendBtn");
@@ -547,6 +740,7 @@
       async function sendMessage() {
         const name = (nameEl?.value || "").trim();
         const email = (emailEl?.value || "").trim();
+        const phone = (phoneEl?.value || "").trim();
         const message = (msgEl?.value || "").trim();
 
         if (!name) {
@@ -578,6 +772,7 @@
             await window.emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
               from_name: name,
               from_email: email,
+              phone,
               message
             });
 
@@ -587,7 +782,7 @@
           }
 
           const subject = encodeURIComponent("Kontaktanfrage Website");
-          const body = encodeURIComponent(`Name: ${name}\nE-Mail: ${email}\n\nNachricht:\n${message}`);
+          const body = encodeURIComponent(`Name: ${name}\nE-Mail: ${email}\nTelefon: ${phone || "-"}\n\nNachricht:\n${message}`);
           window.location.href = `mailto:info@websolutions.ch?subject=${subject}&body=${body}`;
           setStatus("ok", "Mailprogramm geöffnet – bitte senden Sie die E-Mail ab.");
         } catch (err) {

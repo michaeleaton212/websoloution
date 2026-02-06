@@ -1,13 +1,88 @@
 // script.js - Refactored for CSS Scroll Snap ONLY (no wheel/scroll interception)
 document.addEventListener('DOMContentLoaded', function () {
+  // Mobile keyboard: expose keyboard height to CSS via VisualViewport.
+  // This lets us reserve bottom space so the contact form doesn't get covered or jump.
+  (function initKeyboardViewportVars(){
+    if (!window.visualViewport) return;
+
+    const vv = window.visualViewport;
+
+    const setKbVar = () => {
+      // Approximate keyboard height (works well for iOS Safari/Chrome Android)
+      const kb = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+      document.documentElement.style.setProperty('--kb', kb.toFixed(0) + 'px');
+    };
+
+    vv.addEventListener('resize', setKbVar, { passive: true });
+    vv.addEventListener('scroll', setKbVar, { passive: true });
+    window.addEventListener('orientationchange', setKbVar, { passive: true });
+    setKbVar();
+  })();
+
+  // Hide the persistent swipe hint when the contact form is on screen
+  // (prevents it covering the send button, especially on mobile)
+  (function initSwipeHintVisibilityBySection(){
+    const swipeHint = document.getElementById('swipeHint');
+    const contactSection = document.getElementById('contact-us');
+    if (!swipeHint || !contactSection) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.target !== contactSection) return;
+        // If contact is meaningfully visible, hide the hint
+        const shouldHide = entry.isIntersecting && entry.intersectionRatio >= 0.35;
+        document.body.classList.toggle('hide-swipehint', shouldHide);
+      });
+    }, {
+      threshold: [0, 0.2, 0.35, 0.6]
+    });
+
+    observer.observe(contactSection);
+  })();
+
+  // Disable scroll-snap while typing (helps iOS Safari / Android Chrome keyboard behavior)
+  (function initTypingMode(){
+    let blurTimer;
+    document.addEventListener('focusin', (e) => {
+      const t = e.target;
+      if (!t || !(t instanceof HTMLElement)) return;
+      if (!t.closest || !t.closest('#contact-form')) return;
+      document.body.classList.add('is-typing');
+      document.documentElement.classList.add('is-typing');
+
+      // Ensure the focused control is visible (avoid it being hidden behind keyboard)
+      // Use a small delay so iOS has time to open the keyboard.
+      window.setTimeout(() => {
+        try {
+          t.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'smooth' });
+        } catch (_) {}
+      }, 60);
+      if (blurTimer) window.clearTimeout(blurTimer);
+    });
+
+    document.addEventListener('focusout', (e) => {
+      const t = e.target;
+      if (!t || !(t instanceof HTMLElement)) return;
+      if (!t.closest || !t.closest('#contact-form')) return;
+      if (blurTimer) window.clearTimeout(blurTimer);
+      blurTimer = window.setTimeout(() => {
+        // Only remove if nothing inside the form is focused anymore
+        const form = document.getElementById('contact-form');
+        const active = document.activeElement;
+        if (form && active && form.contains(active)) return;
+        document.body.classList.remove('is-typing');
+        document.documentElement.classList.remove('is-typing');
+      }, 80);
+    });
+  })();
+
   // ===== Scroll-reveal animations (Services cards) =====
   (function initServicesCardReveal(){
     const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReducedMotion) return;
 
-    const scrollRoot = document.querySelector('main.page');
     const cards = Array.from(document.querySelectorAll('.services-feature-card'));
-    if (!scrollRoot || cards.length === 0) return;
+    if (cards.length === 0) return;
 
     // Mark as reveal-enabled (CSS keeps no-JS safe)
     cards.forEach(c => c.classList.add('reveal-ready'));
@@ -19,7 +94,6 @@ document.addEventListener('DOMContentLoaded', function () {
         observer.unobserve(entry.target);
       });
     }, {
-      root: scrollRoot,
       threshold: 0.18,
       rootMargin: '0px 0px -10% 0px'
     });
@@ -100,33 +174,157 @@ document.addEventListener('DOMContentLoaded', function () {
   ];
 
   // ===== References =====
-  const pageContainer = document.querySelector('main.page');
   const pricingSection = document.getElementById('pricing');
 
-  // Smooth in-page anchor scrolling inside the main scroll container
-  // (Needed because the page scrolls inside main.page, not the window.)
-  if (pageContainer) {
-    pageContainer.addEventListener('click', (e) => {
-      const link = e.target && e.target.closest ? e.target.closest('a[href^="#"]') : null;
-      if (!link) return;
-      if (link.classList && link.classList.contains('nav-link')) return; // handled separately
+  function getFixedHeaderOffset(){
+    const nav = document.querySelector('.navbar-container');
+    const navH = nav ? nav.getBoundingClientRect().height : 0;
+    return Math.ceil(navH + 16);
+  }
 
-      const href = link.getAttribute('href') || '';
-      if (href === '#' || href.length < 2) return;
+  // CSS Scroll Snap is great for manual scrolling, but it can fight with
+  // programmatic smooth scrolling (anchor clicks / wheel assist) and cause
+  // an extra "snap" jump. We temporarily disable snap during those scrolls.
+  function temporarilyDisableScrollSnap(durationMs){
+    const root = document.documentElement;
+    root.classList.add('snap-disabled');
+    if (temporarilyDisableScrollSnap._t) window.clearTimeout(temporarilyDisableScrollSnap._t);
+    temporarilyDisableScrollSnap._t = window.setTimeout(() => {
+      root.classList.remove('snap-disabled');
+    }, Math.max(0, durationMs || 0));
+  }
 
-      const targetId = href.slice(1);
-      const targetElement = document.getElementById(targetId);
-      if (!targetElement) return;
+  function scrollToId(targetId){
+    const targetElement = document.getElementById(targetId);
+    if (!targetElement) return;
+
+    const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // Most sections should land below the fixed navbar.
+    // Services (#pricing) should land at the real viewport top (no previous section visible).
+    const headerOffset = targetId === 'pricing' ? 0 : getFixedHeaderOffset();
+    const top = window.scrollY + targetElement.getBoundingClientRect().top - headerOffset;
+
+    // Prevent snap from overriding the intended landing position.
+    temporarilyDisableScrollSnap(prefersReducedMotion ? 0 : 900);
+    window.scrollTo({ top, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+  }
+
+  // Mouse wheel assist: one wheel step -> next/prev section (keeps scrolling comfortable)
+  // Applies mainly to classic mouse wheels (deltaMode === 1). Trackpads keep native scrolling.
+  (function initMouseWheelSnapAssist(){
+    const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let isAutoScrolling = false;
+    let autoScrollTimer = 0;
+
+    function getSections(){
+      return Array.from(document.querySelectorAll('main.page > section'));
+    }
+
+    function getCurrentSection(sections){
+      const y = window.scrollY + getFixedHeaderOffset() + 2;
+      let current = sections[0] || null;
+      for (let i = 0; i < sections.length; i++) {
+        const sec = sections[i];
+        if (sec.offsetTop <= y) current = sec;
+        else break;
+      }
+      return current;
+    }
+
+    function sectionTopY(section){
+      return window.scrollY + section.getBoundingClientRect().top;
+    }
+
+    function findTargetIndex(list, dir, headerOffset){
+      const y = window.scrollY + (typeof headerOffset === 'number' ? headerOffset : getFixedHeaderOffset()) + 2;
+
+      if (dir > 0) {
+        const idx = list.findIndex(sec => sec.offsetTop > y);
+        return idx === -1 ? (list.length - 1) : idx;
+      }
+
+      for (let i = list.length - 1; i >= 0; i--) {
+        if (list[i].offsetTop < (y - 10)) return i;
+      }
+      return 0;
+    }
+
+    function scrollToSection(section){
+      const headerOffset = section.id === 'pricing' ? 0 : getFixedHeaderOffset();
+      const top = sectionTopY(section) - headerOffset;
+
+      // Prevent snap from adding a second jump after the smooth scroll.
+      temporarilyDisableScrollSnap(prefersReducedMotion ? 0 : 900);
+      window.scrollTo({ top, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+    }
+
+    window.addEventListener('wheel', (e) => {
+      // Let browser zoom gestures pass through
+      if (e.ctrlKey) return;
+
+      // Disable while typing (mobile keyboard) or inside form fields
+      if (document.body.classList.contains('is-typing') || document.documentElement.classList.contains('is-typing')) return;
+      const targetEl = (e.target instanceof Element) ? e.target : null;
+      if (targetEl && targetEl.closest('input, textarea, select, [contenteditable="true"]')) return;
+
+      // Only activate for mouse wheels (line-based) or very large deltas
+      const isMouseWheel = e.deltaMode === 1;
+      const isLargeDelta = Math.abs(e.deltaY) >= 80;
+      if (!isMouseWheel && !isLargeDelta) return;
+
+      const sections = getSections();
+      if (sections.length < 2) return;
+
+      const currentSection = getCurrentSection(sections);
+      const currentHeaderOffset = (currentSection && currentSection.id === 'pricing') ? 0 : getFixedHeaderOffset();
+      if (currentSection) {
+        // If a section is taller than the viewport, allow normal scrolling inside it.
+        const tooTall = currentSection.scrollHeight > (window.innerHeight + 24);
+        const isContactArea = currentSection.id === 'contact-us' || currentSection.id === 'imprint';
+
+        // Never force snap-jumps in form-heavy areas.
+        if (isContactArea) return;
+
+        // If a section is taller than the viewport (common when padding/fonts vary),
+        // we still want the "one wheel step -> next section" behavior when the
+        // section is currently aligned at the top (i.e. user is at the start).
+        // Otherwise, let the browser do normal scrolling within the tall section.
+        if (tooTall) {
+          const rect = currentSection.getBoundingClientRect();
+          // A section can be considered "top aligned" in two valid states:
+          // 1) Our programmatic scroll lands it just below the fixed navbar (offset).
+          // 2) The initial page load at scrollY=0 where the first section starts at 0.
+          const offset = getFixedHeaderOffset();
+          const topAligned =
+            Math.min(
+              Math.abs(rect.top - offset),
+              Math.abs(rect.top)
+            ) <= 14;
+          if (!topAligned) return;
+        }
+      }
+
+      // Throttle during smooth scroll so we don't queue multiple jumps
+      if (isAutoScrolling) {
+        e.preventDefault();
+        return;
+      }
+
+      const dir = e.deltaY > 0 ? 1 : -1;
+      const idx = findTargetIndex(sections, dir, currentHeaderOffset);
+      const section = sections[idx];
+      if (!section) return;
 
       e.preventDefault();
+      isAutoScrolling = true;
+      scrollToSection(section);
 
-      const containerRect = pageContainer.getBoundingClientRect();
-      const targetRect = targetElement.getBoundingClientRect();
-      const targetTop = (targetRect.top - containerRect.top) + pageContainer.scrollTop;
-
-      pageContainer.scrollTo({ top: targetTop, behavior: 'smooth' });
-    });
-  }
+      if (autoScrollTimer) window.clearTimeout(autoScrollTimer);
+      autoScrollTimer = window.setTimeout(() => {
+        isAutoScrolling = false;
+      }, prefersReducedMotion ? 200 : 700);
+    }, { passive: false });
+  })();
 
   // ===== Service Navigation =====
   let currentServiceIndex = 0;
@@ -228,72 +426,70 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // Navbar click handlers (scroll inside .page to the target section)
-  // Only intercept in-page hash links; let normal navigation happen otherwise.
-  document.querySelectorAll('.nav-link').forEach(link => {
-    link.addEventListener('click', function (e) {
-      const href = this.getAttribute('href') || '';
-      if (!href.startsWith('#')) return;
+  // In-page hash links: use window scrolling with a fixed-header offset
+  document.addEventListener('click', (e) => {
+    const link = e.target && e.target.closest ? e.target.closest('a[href^="#"]') : null;
+    if (!link) return;
 
-      e.preventDefault();
+    const href = link.getAttribute('href') || '';
+    if (href === '#' || href.length < 2) return;
 
-      const targetId = href.slice(1);
-      const targetElement = document.getElementById(targetId);
-      const container = document.querySelector('main.page');
+    const targetId = href.slice(1);
+    if (!document.getElementById(targetId)) return;
 
-      if (!targetElement || !container) return;
+    e.preventDefault();
+    scrollToId(targetId);
 
-      // Scroll position of target relative to the scroll container
-      const containerRect = container.getBoundingClientRect();
-      const targetRect = targetElement.getBoundingClientRect();
-      const targetTop = (targetRect.top - containerRect.top) + container.scrollTop;
+    if (targetId === 'pricing') {
+      scrollToService(0);
+    }
 
-      container.scrollTo({ top: targetTop, behavior: 'smooth' });
-
-      // If going to pricing/services, reset to first service
-      if (targetId === 'pricing') {
-        scrollToService(0);
-      }
-
-      // Update active state
-      document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-      this.classList.add('active');
-    });
+    // Update active state immediately
+    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+    if (link.classList && link.classList.contains('nav-link')) {
+      link.classList.add('active');
+    }
   });
 
-  // Optional: update active nav link on scroll (works when .page is scroll container)
-  if (pageContainer) {
+  // Update active nav link on window scroll
+  (function initActiveNavOnScroll(){
+    const navLinks = Array.from(document.querySelectorAll('.nav-link'));
     const sections = Array.from(document.querySelectorAll('main.page > section'));
+    if (navLinks.length === 0 || sections.length === 0) return;
 
+    let ticking = false;
     const setActiveBySection = () => {
-      const containerTop = pageContainer.getBoundingClientRect().top;
+      ticking = false;
+      const offsetTop = getFixedHeaderOffset();
 
       let best = null;
       let bestDist = Infinity;
-
       sections.forEach(sec => {
         const r = sec.getBoundingClientRect();
-        const dist = Math.abs(r.top - containerTop);
+        const dist = Math.abs(r.top - offsetTop);
         if (dist < bestDist) {
           bestDist = dist;
           best = sec;
         }
       });
 
-      if (!best) return;
-
-      const id = best.getAttribute('id');
+      const id = best && best.getAttribute('id');
       if (!id) return;
 
-      document.querySelectorAll('.nav-link').forEach(l => {
+      navLinks.forEach(l => {
         const href = l.getAttribute('href');
         l.classList.toggle('active', href === `#${id}`);
       });
     };
 
-    pageContainer.addEventListener('scroll', setActiveBySection, { passive: true });
+    window.addEventListener('scroll', () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(setActiveBySection);
+    }, { passive: true });
+
     setActiveBySection();
-  }
+  })();
 
   // ===== Initialize =====
   updateAllServiceButtons(0);
