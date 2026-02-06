@@ -1,4 +1,4 @@
-// script.js - Refactored for CSS Scroll Snap ONLY (no wheel/scroll interception)
+// script.js - CSS Scroll Snap + optional mouse-wheel section snapping
 document.addEventListener('DOMContentLoaded', function () {
   // Mobile keyboard: expose keyboard height to CSS via VisualViewport.
   // This lets us reserve bottom space so the contact form doesn't get covered or jump.
@@ -101,6 +101,38 @@ document.addEventListener('DOMContentLoaded', function () {
     // Stagger a tiny bit for a premium feel
     cards.forEach((card, i) => {
       setTimeout(() => observer.observe(card), i * 60);
+    });
+  })();
+
+  // ===== Scroll-reveal animations (Sections) =====
+  (function initSectionReveal(){
+    const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
+
+    const sections = Array.from(document.querySelectorAll('main.page > section'));
+    if (sections.length === 0) return;
+
+    // Activate reveal styles only when JS is available
+    sections.forEach(sec => sec.classList.add('reveal-ready'));
+
+    // Keep hero visible immediately (first paint should not look "missing")
+    const hero = document.getElementById('heroStage');
+    if (hero) hero.classList.add('reveal-in');
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('reveal-in');
+        observer.unobserve(entry.target);
+      });
+    }, {
+      threshold: 0.18,
+      rootMargin: '0px 0px -12% 0px'
+    });
+
+    sections.forEach(sec => {
+      if (sec === hero) return;
+      observer.observe(sec);
     });
   })();
 
@@ -265,7 +297,17 @@ document.addEventListener('DOMContentLoaded', function () {
       // Disable while typing (mobile keyboard) or inside form fields
       if (document.body.classList.contains('is-typing') || document.documentElement.classList.contains('is-typing')) return;
       const targetEl = (e.target instanceof Element) ? e.target : null;
-      if (targetEl && targetEl.closest('input, textarea, select, [contenteditable="true"]')) return;
+      const interactiveEl = targetEl ? targetEl.closest('input, textarea, select, [contenteditable="true"]') : null;
+      if (interactiveEl) {
+        // If the control is focused (user is typing) or it can scroll internally,
+        // don't hijack the wheel.
+        const isFocused = document.activeElement === interactiveEl;
+        const canScrollInternally = (
+          interactiveEl instanceof HTMLElement &&
+          interactiveEl.scrollHeight > (interactiveEl.clientHeight + 2)
+        );
+        if (isFocused || canScrollInternally) return;
+      }
 
       // Only activate for mouse wheels (line-based) or very large deltas
       const isMouseWheel = e.deltaMode === 1;
@@ -280,10 +322,11 @@ document.addEventListener('DOMContentLoaded', function () {
       if (currentSection) {
         // If a section is taller than the viewport, allow normal scrolling inside it.
         const tooTall = currentSection.scrollHeight > (window.innerHeight + 24);
-        const isContactArea = currentSection.id === 'contact-us' || currentSection.id === 'imprint';
+        const isImprintArea = currentSection.id === 'imprint';
 
-        // Never force snap-jumps in form-heavy areas.
-        if (isContactArea) return;
+        // Never force snap-jumps in the imprint area.
+        // Contact stays enabled so one mouse-wheel step can move to the next section.
+        if (isImprintArea) return;
 
         // If a section is taller than the viewport (common when padding/fonts vary),
         // we still want the "one wheel step -> next section" behavior when the
@@ -324,6 +367,191 @@ document.addEventListener('DOMContentLoaded', function () {
         isAutoScrolling = false;
       }, prefersReducedMotion ? 200 : 700);
     }, { passive: false });
+  })();
+
+  // Touch/Swipe assist (mobile): one vertical swipe -> next/prev section.
+  // We do NOT block native scrolling; we only "finish" the gesture by snapping
+  // to the next/previous section after the swipe ends.
+  (function initTouchSwipeSnapAssist(){
+    const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
+
+    let isAutoScrolling = false;
+    let autoScrollTimer = 0;
+
+    let startX = 0;
+    let startY = 0;
+    let startTime = 0;
+    let pointerActive = false;
+
+    function getSections(){
+      return Array.from(document.querySelectorAll('main.page > section'));
+    }
+
+    function getCurrentSection(sections){
+      const y = window.scrollY + getFixedHeaderOffset() + 2;
+      let current = sections[0] || null;
+      for (let i = 0; i < sections.length; i++) {
+        const sec = sections[i];
+        if (sec.offsetTop <= y) current = sec;
+        else break;
+      }
+      return current;
+    }
+
+    function sectionTopY(section){
+      return window.scrollY + section.getBoundingClientRect().top;
+    }
+
+    function findTargetIndex(list, dir, headerOffset){
+      const y = window.scrollY + (typeof headerOffset === 'number' ? headerOffset : getFixedHeaderOffset()) + 2;
+
+      if (dir > 0) {
+        const idx = list.findIndex(sec => sec.offsetTop > y);
+        return idx === -1 ? (list.length - 1) : idx;
+      }
+
+      for (let i = list.length - 1; i >= 0; i--) {
+        if (list[i].offsetTop < (y - 10)) return i;
+      }
+      return 0;
+    }
+
+    function scrollToSection(section){
+      const headerOffset = section.id === 'pricing' ? 0 : getFixedHeaderOffset();
+      const top = sectionTopY(section) - headerOffset;
+      temporarilyDisableScrollSnap(900);
+      window.scrollTo({ top, behavior: 'smooth' });
+    }
+
+    function isBusyTyping(){
+      return document.body.classList.contains('is-typing') || document.documentElement.classList.contains('is-typing');
+    }
+
+    function shouldIgnoreStartTarget(target){
+      const targetEl = (target instanceof Element) ? target : null;
+      if (!targetEl) return false;
+      const interactiveEl = targetEl.closest('input, textarea, select, [contenteditable="true"]');
+      if (!interactiveEl) return false;
+
+      const isFocused = document.activeElement === interactiveEl;
+      const canScrollInternally = (
+        interactiveEl instanceof HTMLElement &&
+        interactiveEl.scrollHeight > (interactiveEl.clientHeight + 2)
+      );
+
+      return isFocused || canScrollInternally;
+    }
+
+    function maybeSnapBySwipe(dir){
+      const sections = getSections();
+      if (sections.length < 2) return;
+
+      const currentSection = getCurrentSection(sections);
+      if (!currentSection) return;
+
+      // Never force snap-jumps in the imprint area.
+      if (currentSection.id === 'imprint') return;
+
+      // If a section is taller than the viewport, allow normal scrolling inside it
+      // unless it's currently aligned at the top.
+      const currentHeaderOffset = (currentSection.id === 'pricing') ? 0 : getFixedHeaderOffset();
+      const tooTall = currentSection.scrollHeight > (window.innerHeight + 24);
+      if (tooTall) {
+        const rect = currentSection.getBoundingClientRect();
+        const offset = getFixedHeaderOffset();
+        const topAligned = Math.min(Math.abs(rect.top - offset), Math.abs(rect.top)) <= 14;
+        if (!topAligned) return;
+      }
+
+      if (isAutoScrolling) return;
+
+      const idx = findTargetIndex(sections, dir, currentHeaderOffset);
+      const section = sections[idx];
+      if (!section) return;
+
+      isAutoScrolling = true;
+      scrollToSection(section);
+
+      if (autoScrollTimer) window.clearTimeout(autoScrollTimer);
+      autoScrollTimer = window.setTimeout(() => {
+        isAutoScrolling = false;
+      }, 800);
+    }
+
+    // Prefer Pointer Events when available (covers most modern mobile browsers)
+    const supportsPointer = 'PointerEvent' in window;
+
+    if (supportsPointer) {
+      window.addEventListener('pointerdown', (e) => {
+        if (!e || e.pointerType !== 'touch') return;
+        if (e.ctrlKey) return;
+        if (isBusyTyping()) return;
+        if (shouldIgnoreStartTarget(e.target)) return;
+
+        pointerActive = true;
+        startX = e.clientX;
+        startY = e.clientY;
+        startTime = performance.now();
+      }, { passive: true });
+
+      window.addEventListener('pointerup', (e) => {
+        if (!pointerActive) return;
+        pointerActive = false;
+
+        if (!e || e.pointerType !== 'touch') return;
+        if (isBusyTyping()) return;
+
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+        const dt = Math.max(1, performance.now() - startTime);
+
+        // Only treat as a vertical swipe if mostly vertical and meaningful.
+        if (Math.abs(dy) < 52) return;
+        if (Math.abs(dy) < Math.abs(dx) * 1.35) return;
+
+        // Avoid very slow drags (let native scroll-snap do its thing)
+        const speed = Math.abs(dy) / dt; // px/ms
+        if (speed < 0.18) return;
+
+        const dir = dy < 0 ? 1 : -1; // swipe up -> scroll down
+        // Let the native scroll settle for a tick, then snap to target.
+        requestAnimationFrame(() => maybeSnapBySwipe(dir));
+      }, { passive: true });
+
+      window.addEventListener('pointercancel', () => {
+        pointerActive = false;
+      }, { passive: true });
+    } else {
+      // Fallback: Touch Events
+      window.addEventListener('touchstart', (e) => {
+        const t = e.changedTouches && e.changedTouches[0];
+        if (!t) return;
+        if (isBusyTyping()) return;
+        if (shouldIgnoreStartTarget(e.target)) return;
+        startX = t.clientX;
+        startY = t.clientY;
+        startTime = performance.now();
+      }, { passive: true });
+
+      window.addEventListener('touchend', (e) => {
+        const t = e.changedTouches && e.changedTouches[0];
+        if (!t) return;
+        if (isBusyTyping()) return;
+
+        const dx = t.clientX - startX;
+        const dy = t.clientY - startY;
+        const dt = Math.max(1, performance.now() - startTime);
+
+        if (Math.abs(dy) < 52) return;
+        if (Math.abs(dy) < Math.abs(dx) * 1.35) return;
+        const speed = Math.abs(dy) / dt;
+        if (speed < 0.18) return;
+
+        const dir = dy < 0 ? 1 : -1;
+        requestAnimationFrame(() => maybeSnapBySwipe(dir));
+      }, { passive: true });
+    }
   })();
 
   // ===== Service Navigation =====

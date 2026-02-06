@@ -358,6 +358,14 @@ body.hide-swipehint #swipeHint{
   #introPill, #introPill .pill-bar{ animation: none !important; }
   #swipeHint .swipeHint-shimmer,
   #swipeHint .swipeHint-bar{ animation: none !important; }
+
+  /* Scroll reveal: keep content visible without animation */
+  .reveal-ready{
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+  }
 }
 
 /* =====================
@@ -390,6 +398,27 @@ body.hide-swipehint #swipeHint{
 .imprint-section{
   min-height: 100vh;
   scroll-snap-align: start;
+}
+
+/* =====================
+   SCROLL REVEAL (SECTIONS)
+   ===================== */
+/* Only becomes active when JS adds .reveal-ready, so no-JS stays readable */
+main.page > section.reveal-ready{
+  opacity: 0;
+  transform: translate3d(0, 18px, 0);
+  filter: blur(4px);
+  transition:
+    opacity 520ms cubic-bezier(.22,1,.36,1),
+    transform 520ms cubic-bezier(.22,1,.36,1),
+    filter 520ms cubic-bezier(.22,1,.36,1);
+  will-change: opacity, transform, filter;
+}
+
+main.page > section.reveal-in{
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  filter: blur(0);
 }
 
 /* =====================

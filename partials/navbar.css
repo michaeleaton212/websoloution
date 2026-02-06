@@ -41,8 +41,7 @@
 }
 /* Animation/other styles remain as before */
 .app-wrapper {
-  position: fixed;
-  inset: 0;
+  position: relative;
   display: block;
   /* Let the shared site background (set on html/body) show through */
   background-color: transparent;
@@ -51,7 +50,7 @@
   background-repeat: no-repeat;
   background-size: cover;
   min-height: 100vh;
-  overflow-y: auto;
+  overflow: visible;
   padding: 2rem;
   scrollbar-gutter: stable;
 }
