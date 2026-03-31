@@ -142,6 +142,23 @@
     if (isEmbedMode()) return;
     // If already decided, do nothing.
     if (consentValue() === "accepted" || consentValue() === "rejected") return;
+
+    // On pages that signal "wait for intro", delay until body.intro-done is set.
+    if (document.body && document.body.dataset.ccWaitIntro) {
+      if (document.body.classList.contains("intro-done")) {
+        showBanner();
+      } else {
+        var obs = new MutationObserver(function (_, ob) {
+          if (document.body.classList.contains("intro-done")) {
+            ob.disconnect();
+            showBanner();
+          }
+        });
+        obs.observe(document.body, { attributes: true, attributeFilter: ["class"] });
+      }
+      return;
+    }
+
     showBanner();
   }
 

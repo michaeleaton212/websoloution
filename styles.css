@@ -1049,7 +1049,7 @@ main.page{
 /* Base (shared) */
 a.hero-cta,
 a.contact-mail,
-button:not(.next-button):not(.back-button){
+button:not(.next-button):not(.back-button):not(.lq-toggle){
   position: relative;
   display: inline-block;
   padding: 12px 22px;
@@ -3072,10 +3072,29 @@ body.intro-done .word-reveal {
     inset 0 1px 0 rgba(255,255,255,0.25);
 }
 
+/* Toggle wrapper + label */
+.lq-toggle-wrap {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.lq-toggle-label {
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.15px;
+  color: inherit;
+  opacity: 0.42;
+  pointer-events: none;
+  user-select: none;
+  white-space: nowrap;
+}
+
 /* Hide toggles + separator on narrow mobile */
 @media (max-width: 600px) {
   .navbar-sep,
-  .lq-toggle { display: none !important; }
+  .lq-toggle-wrap { display: none !important; }
 }
 
 /* =====================================================================

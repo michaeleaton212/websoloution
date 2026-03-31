@@ -129,7 +129,7 @@
   </script>
 </head>
 
-<body>
+<body data-cc-wait-intro="1">
   <!-- ===== Theme & Intro toggles init ===== -->
   <script>
     (function () {
@@ -149,6 +149,8 @@
         else { html.removeAttribute('data-theme'); }
         var btn = document.getElementById('themeToggle');
         if (btn) btn.setAttribute('aria-pressed', theme === 'light' ? 'true' : 'false');
+        var lbl = document.getElementById('themeLabelEl');
+        if (lbl) lbl.textContent = theme === 'light' ? 'Light Mode' : 'Dark Mode';
         localStorage.setItem('ws-theme', theme);
         currentTheme = theme;
       }
@@ -169,6 +171,9 @@
             applyTheme(currentTheme === 'light' ? 'dark' : 'light', true);
           });
         }
+        // Sync initial label text
+        var lbl = document.getElementById('themeLabelEl');
+        if (lbl) lbl.textContent = currentTheme === 'light' ? 'Light Mode' : 'Dark Mode';
 
         var introBtn = document.getElementById('introToggle');
         if (introBtn) {
@@ -212,20 +217,26 @@
           <a class="nav-link" href="#contact-us">Contact us</a>
           <a class="nav-link" href="#imprint">Imprint</a>
           <span class="navbar-sep" aria-hidden="true"></span>
-          <button class="lq-toggle" id="themeToggle" type="button"
-                  aria-label="Dark / Light Mode umschalten" aria-pressed="false"
-                  title="Dark / Light Mode">
-            <span class="lq-toggle__track">
-              <span class="lq-toggle__thumb"></span>
-            </span>
-          </button>
-          <button class="lq-toggle" id="introToggle" type="button"
-                  aria-label="Intro-Animation ein/aus" aria-pressed="true"
-                  title="Intro-Animation">
-            <span class="lq-toggle__track">
-              <span class="lq-toggle__thumb"></span>
-            </span>
-          </button>
+          <span class="lq-toggle-wrap">
+            <button class="lq-toggle" id="themeToggle" type="button"
+                    aria-label="Dark / Light Mode umschalten" aria-pressed="false"
+                    title="Dark / Light Mode">
+              <span class="lq-toggle__track">
+                <span class="lq-toggle__thumb"></span>
+              </span>
+            </button>
+            <span class="lq-toggle-label" id="themeLabelEl">Dark Mode</span>
+          </span>
+          <span class="lq-toggle-wrap">
+            <button class="lq-toggle" id="introToggle" type="button"
+                    aria-label="Intro-Animation ein/aus" aria-pressed="true"
+                    title="Intro-Animation">
+              <span class="lq-toggle__track">
+                <span class="lq-toggle__thumb"></span>
+              </span>
+            </button>
+            <span class="lq-toggle-label" aria-hidden="true">Intro-Animation</span>
+          </span>
         </nav>
       </div>
 
@@ -1046,6 +1057,7 @@
           overlay.setAttribute("aria-hidden", "true");
           overlay.style.display = "none";
           showContent();
+          document.body.classList.add("intro-done");
           return;
         }
 
