@@ -408,6 +408,7 @@ body.hide-swipehint #swipeHint{
    ===================== */
 .hero,
 .pricing-section,
+.referenzen-section,
 .about-section,
 .seo-geo-section,
 .contact-section{
@@ -1637,6 +1638,56 @@ a.hero-cta.hero-cta--ghost:active{
 }
 
 /* =====================================================
+   REFERENZEN SECTION
+   ===================================================== */
+.referenzen-section {
+  min-height: 100vh;
+  padding: 6rem 2rem 4rem;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.referenzen-section .page-content {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Cards are <a> tags — reset link styling */
+.referenzen-card {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.referenzen-card:focus-visible {
+  outline: 2px solid rgba(var(--accent-rgb), 0.55);
+  outline-offset: 3px;
+}
+
+.referenzen-domain {
+  font-size: 0.78rem;
+  opacity: 0.50;
+  letter-spacing: 0.04em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.referenzen-arrow {
+  font-style: normal;
+  font-size: 1.1rem;
+  opacity: 0.60;
+  transition: opacity 220ms ease, transform 220ms ease;
+  flex-shrink: 0;
+}
+
+.referenzen-card:hover .referenzen-arrow {
+  opacity: 1;
+  transform: translate(2px, -2px);
+}
+
+/* =====================================================
    PRICING SECTION STYLES (Services Info)
    ===================================================== */
 .pricing-section {
@@ -2512,6 +2563,7 @@ input.text-input{
 /* Snap-Ziele */
 .hero,
 .pricing-section,
+.referenzen-section,
 .about-section,
 .seo-geo-section,
 .contact-section,
@@ -2520,7 +2572,7 @@ input.text-input{
 .imprint-section{
   min-height: 100vh;
   scroll-snap-align: start;
-  scroll-snap-stop: always;  /* optional, macht Snap “härter” */
+  scroll-snap-stop: always;
 }
 
 /* Desktop: keep a small top spacing (avoid overly low placement) */
@@ -2651,6 +2703,7 @@ input.text-input{
   /* Sections: reduce side padding */
   .hero{ padding: calc(120px + env(safe-area-inset-top, 0px)) 14px 52px; }
   .pricing-section,
+  .referenzen-section,
   .about-section,
   .seo-geo-section{ padding: 4.75rem 1rem 3rem; }
 
@@ -2660,6 +2713,7 @@ input.text-input{
   html{ scroll-snap-type: y proximity; }
   .hero,
   .pricing-section,
+  .referenzen-section,
   .about-section,
   .seo-geo-section,
   .contact-section,
@@ -3209,6 +3263,7 @@ html[data-theme="light"] .seo-geo-card-title      { color: rgba(8,14,10,0.88); }
 html[data-theme="light"] .services-feature-text,
 html[data-theme="light"] .seo-geo-card-text       { color: rgba(10,16,12,0.64); }
 html[data-theme="light"] .services-feature-footer { color: rgba(10,16,12,0.55); }
+html[data-theme="light"] .referenzen-domain       { color: rgba(10,16,12,0.45); }
 html[data-theme="light"] .services-feature-arrow {
   background: rgba(0,0,0,0.06);
   border-color: rgba(0,0,0,0.09);
