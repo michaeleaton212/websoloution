@@ -2945,100 +2945,128 @@ body.intro-done .word-reveal {
   align-self: center;
 }
 
+/* ── Liquid Glass Toggle — iOS 26 style ─────────────────────────────────
+   The outer button is invisible (click target only).
+   All visual identity lives in .lq-toggle__track (the glass pill).
+   Depth is created through shadows + backdrop-filter, never a border line.
+───────────────────────────────────────────────────────────────────────── */
 .lq-toggle {
   flex-shrink: 0;
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 5px 8px;
-  border-radius: 999px;
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.16);
-  -webkit-backdrop-filter: blur(14px) saturate(180%);
-  backdrop-filter: blur(14px) saturate(180%);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.16);
+  padding: 0;
+  background: none;
+  border: none;
+  box-shadow: none;
   cursor: pointer;
-  transition: background 360ms ease, border-color 360ms ease, box-shadow 360ms ease;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
 }
 
-.lq-toggle:hover {
-  background: rgba(255,255,255,0.13);
-  border-color: rgba(255,255,255,0.24);
+.lq-toggle:focus-visible .lq-toggle__track {
+  box-shadow:
+    inset 0 1.5px 0 rgba(255,255,255,0.22),
+    inset 0 -1.5px 0 rgba(0,0,0,0.30),
+    0 0 0 2px rgba(var(--accent-rgb), 0.50),
+    0 6px 20px rgba(0,0,0,0.35);
 }
 
-.lq-toggle:focus-visible {
-  outline: 2px solid rgba(var(--accent-rgb), 0.65);
-  outline-offset: 3px;
-}
-
-/* Icon labels */
-.lq-toggle__icon {
-  font-size: 11px;
-  line-height: 1;
-  opacity: 0.75;
-  transition: opacity 300ms ease;
-}
-.lq-toggle:hover .lq-toggle__icon { opacity: 0.95; }
-
-/* The sliding pill track */
+/* Glass pill — the visual toggle */
 .lq-toggle__track {
   position: relative;
-  width: 34px;
-  height: 19px;
+  width: 54px;
+  height: 30px;
   border-radius: 999px;
-  background: rgba(0,0,0,0.28);
-  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(20, 30, 25, 0.60);
+  border: none;
   display: flex;
   align-items: center;
-  padding: 0 2px;
+  padding: 0 3px;
   box-sizing: border-box;
-  transition: background 360ms ease;
+  overflow: hidden;
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  backdrop-filter: blur(18px) saturate(160%);
+  box-shadow:
+    inset 0 1.5px 0 rgba(255,255,255,0.18),
+    inset 0 -1.5px 0 rgba(0,0,0,0.28),
+    0 6px 20px rgba(0,0,0,0.35);
+  transition: background 400ms ease, box-shadow 400ms ease;
 }
 
-/* The sliding thumb */
+/* Top-glass sheen (no border, depth via gradient) */
+.lq-toggle__track::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    160deg,
+    rgba(255,255,255,0.14) 0%,
+    rgba(255,255,255,0.03) 45%,
+    rgba(0,0,0,0.06) 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Large pill thumb — slides within the glass track */
 .lq-toggle__thumb {
-  width: 15px;
-  height: 15px;
+  position: relative;
+  z-index: 2;
+  width: 36px;
+  height: 24px;
   border-radius: 999px;
-  background: rgba(50,62,58,0.92);
+  background: rgba(55, 70, 62, 0.88);
+  border: none;
   box-shadow:
-    0 2px 6px rgba(0,0,0,0.50),
-    inset 0 1px 0 rgba(255,255,255,0.18);
+    0 3px 10px rgba(0,0,0,0.45),
+    inset 0 1px 0 rgba(255,255,255,0.16);
   transform: translateX(0);
-  /* Spring / bouncy easing — like iOS */
-  transition: transform 500ms cubic-bezier(0.34,1.56,0.64,1),
-              background  360ms ease,
-              box-shadow  360ms ease;
+  transition:
+    transform 500ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    background  380ms ease,
+    box-shadow  380ms ease;
   will-change: transform;
   flex-shrink: 0;
 }
 
-/* === Active (aria-pressed="true") === */
+/* === Active (aria-pressed="true") — shared defaults === */
 .lq-toggle[aria-pressed="true"] .lq-toggle__thumb {
-  transform: translateX(15px);  /* track 34 - padding 4 - thumb 15 = 15 */
+  transform: translateX(12px); /* 54 - 6(padding) - 36(thumb) = 12 */
 }
 
-.lq-toggle[aria-pressed="true"] .lq-toggle__track {
-  background: rgba(var(--accent-rgb), 0.35);
-  border-color: rgba(var(--accent-rgb), 0.28);
-}
-
-/* Theme toggle: light mode = bright thumb */
-#themeToggle[aria-pressed="true"] .lq-toggle__thumb {
-  background: rgba(238,244,240,0.97);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.90);
+/* Theme toggle (dark mode = aria-pressed false, light mode = aria-pressed true) */
+#themeToggle[aria-pressed="false"] .lq-toggle__track {
+  background: rgba(10, 16, 13, 0.65);
 }
 #themeToggle[aria-pressed="true"] .lq-toggle__track {
-  background: rgba(200,220,210,0.40);
-  border-color: rgba(200,220,210,0.30);
+  background: rgba(190, 220, 205, 0.38);
+  box-shadow:
+    inset 0 1.5px 0 rgba(255,255,255,0.30),
+    inset 0 -1.5px 0 rgba(0,0,0,0.12),
+    0 6px 20px rgba(0,0,0,0.20);
+}
+#themeToggle[aria-pressed="true"] .lq-toggle__thumb {
+  background: rgba(232, 245, 238, 0.96);
+  box-shadow:
+    0 3px 8px rgba(0,0,0,0.16),
+    inset 0 1px 0 rgba(255,255,255,0.95);
 }
 
-/* Intro toggle: on = green thumb */
+/* Intro toggle (on = green, off = muted) */
+#introToggle[aria-pressed="true"] .lq-toggle__track {
+  background: rgba(var(--accent-rgb), 0.22);
+  box-shadow:
+    inset 0 1.5px 0 rgba(255,255,255,0.20),
+    inset 0 -1.5px 0 rgba(0,0,0,0.20),
+    0 0 18px rgba(var(--accent-rgb), 0.30),
+    0 6px 20px rgba(0,0,0,0.30);
+}
 #introToggle[aria-pressed="true"] .lq-toggle__thumb {
-  background: rgba(var(--accent-rgb), 0.90);
-  box-shadow: 0 2px 8px rgba(var(--accent-rgb), 0.55), inset 0 1px 0 rgba(255,255,255,0.22);
+  background: rgba(var(--accent-rgb), 0.92);
+  box-shadow:
+    0 3px 12px rgba(var(--accent-rgb), 0.50),
+    inset 0 1px 0 rgba(255,255,255,0.25);
 }
 
 /* Hide toggles + separator on narrow mobile */
@@ -3098,11 +3126,11 @@ html[data-theme="light"] .nav-link               { color: rgba(12,20,14,0.65); }
 html[data-theme="light"] .nav-link.active         { color: rgba(8,16,10,0.88); background: rgba(0,0,0,0.07); border-color: rgba(0,0,0,0.10); }
 html[data-theme="light"] .nav-link::after         { background: rgba(var(--accent-rgb), 0.60); }
 html[data-theme="light"] .navbar-sep              { background: rgba(0,0,0,0.12); }
-html[data-theme="light"] .lq-toggle              { background: rgba(0,0,0,0.06); border-color: rgba(0,0,0,0.11); }
-html[data-theme="light"] .lq-toggle:hover        { background: rgba(0,0,0,0.09); }
-html[data-theme="light"] .lq-toggle__track       { background: rgba(0,0,0,0.15); border-color: rgba(0,0,0,0.10); }
-html[data-theme="light"] .lq-toggle__thumb       { background: rgba(40,55,46,0.85); }
-html[data-theme="light"] .lq-toggle__icon        { opacity: 0.65; }
+html[data-theme="light"] .lq-toggle              { background: none; border: none; box-shadow: none; }
+html[data-theme="light"] .lq-toggle__track       { background: rgba(0,0,0,0.18); box-shadow: inset 0 1.5px 0 rgba(255,255,255,0.55), inset 0 -1.5px 0 rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.14); }
+html[data-theme="light"] .lq-toggle__thumb       { background: rgba(30,45,38,0.80); box-shadow: 0 3px 8px rgba(0,0,0,0.20), inset 0 1px 0 rgba(255,255,255,0.30); }
+html[data-theme="light"] #themeToggle[aria-pressed="true"] .lq-toggle__track  { background: rgba(160,200,180,0.50); }
+html[data-theme="light"] #introToggle[aria-pressed="true"] .lq-toggle__track  { background: rgba(var(--accent-rgb),0.28); }
 
 /* Hero */
 html[data-theme="light"] .hero-bg {
