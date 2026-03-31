@@ -1,112 +1,195 @@
-:root{
-  --cc-bg: rgba(10, 12, 18, 0.72);
-  --cc-border: rgba(255,255,255,0.14);
-  --cc-text: rgba(255,255,255,0.92);
-  --cc-muted: rgba(255,255,255,0.72);
-  --cc-btn-bg: rgba(255,255,255,0.12);
-  --cc-btn-bg-hover: rgba(255,255,255,0.18);
-  --cc-btn-border: rgba(255,255,255,0.20);
+/* ── Cookie Consent Banner ─────────────────────────────────────────────── */
+
+@keyframes cookieSlideUp {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
 }
 
-.cookie-consent{
+.cookie-consent {
   position: fixed;
-  left: 16px;
-  right: 16px;
-  bottom: 16px;
+  left: 50%;
+  bottom: 72px;
+  transform: translateX(-50%);
+  width: min(640px, calc(100vw - 32px));
   z-index: 2147483646;
-  display: flex;
-  justify-content: center;
-  pointer-events: none;
+  animation: cookieSlideUp 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
-.cookie-consent__card{
-  pointer-events: auto;
-  width: min(920px, 100%);
-  border-radius: 18px;
-  padding: 14px 14px;
-  background: var(--cc-bg);
-  border: 1px solid var(--cc-border);
-  box-shadow: 0 24px 64px rgba(0,0,0,0.35);
-  backdrop-filter: blur(18px) saturate(160%);
-  -webkit-backdrop-filter: blur(18px) saturate(160%);
+.cookie-consent__card {
+  border-radius: 20px;
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.06);
+  border: none;
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.50),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(24px) saturate(150%);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
 }
 
-.cookie-consent__row{
+.cookie-consent__row {
   display: grid;
   grid-template-columns: 1fr auto;
-  gap: 12px;
+  gap: 16px;
   align-items: center;
 }
 
-.cookie-consent__title{
-  margin: 0 0 4px 0;
+.cookie-consent__title {
+  margin: 0 0 5px 0;
   font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   font-weight: 700;
   font-size: 14px;
-  letter-spacing: 0.2px;
-  color: var(--cc-text);
+  letter-spacing: 0.15px;
+  color: rgba(255, 255, 255, 0.95);
 }
 
-.cookie-consent__text{
+.cookie-consent__text {
   margin: 0;
   font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   font-weight: 400;
   font-size: 13px;
-  line-height: 1.45;
-  color: var(--cc-muted);
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.60);
 }
 
-.cookie-consent__text a{
-  color: var(--cc-text);
+.cookie-consent__text a {
+  color: rgba(255, 255, 255, 0.80);
   text-decoration: underline;
   text-underline-offset: 2px;
+  transition: color 0.2s ease;
 }
 
-.cookie-consent__actions{
+.cookie-consent__text a:hover {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.cookie-consent__actions {
   display: flex;
   gap: 10px;
   align-items: center;
-  justify-content: flex-end;
-  flex-wrap: wrap;
+  flex-shrink: 0;
 }
 
-.cookie-consent__btn{
-  border: 1px solid var(--cc-btn-border);
-  background: var(--cc-btn-bg);
-  color: var(--cc-text);
+/* "Nur essenzielle" — ghost pill (matches .back-button) */
+.cookie-consent__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 18px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.55);
   font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  font-weight: 600;
   font-size: 13px;
-  border-radius: 999px;
-  padding: 10px 14px;
+  font-weight: 600;
+  letter-spacing: 0.1px;
   cursor: pointer;
-  transition: background-color .2s ease, transform .2s ease;
   white-space: nowrap;
+  transition: background 0.22s ease, color 0.22s ease, transform 0.22s ease;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.cookie-consent__btn:hover{
-  background: var(--cc-btn-bg-hover);
+.cookie-consent__btn:hover {
+  background: rgba(255, 255, 255, 0.11);
+  color: rgba(255, 255, 255, 0.80);
   transform: translateY(-1px);
 }
 
-.cookie-consent__btn:active{
+.cookie-consent__btn:active {
   transform: translateY(0);
 }
 
-.cookie-consent__btn--primary{
-  background: rgba(255,255,255,0.22);
-}
-
-.cookie-consent__btn:focus-visible{
-  outline: 2px solid rgba(255,255,255,0.55);
+.cookie-consent__btn:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.45);
   outline-offset: 2px;
 }
 
-@media (max-width: 680px){
-  .cookie-consent__row{
-    grid-template-columns: 1fr;
+/* "Alle akzeptieren" — green accent pill (matches .next-button) */
+.cookie-consent__btn--primary {
+  background: rgba(var(--accent-rgb), 0.85);
+  border-color: transparent;
+  color: #fff;
+}
+
+.cookie-consent__btn--primary:hover {
+  background: rgba(var(--accent-rgb), 1);
+  color: #fff;
+}
+
+/* ── Light mode overrides ───────────────────────────────────────────────── */
+html[data-theme="light"] .cookie-consent__card {
+  background: rgba(255, 255, 255, 0.68);
+  border: none;
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.90),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.06);
+}
+
+html[data-theme="light"] .cookie-consent__title {
+  color: rgba(0, 0, 0, 0.88);
+}
+
+html[data-theme="light"] .cookie-consent__text {
+  color: rgba(0, 0, 0, 0.55);
+}
+
+html[data-theme="light"] .cookie-consent__text a {
+  color: rgba(0, 0, 0, 0.75);
+}
+
+html[data-theme="light"] .cookie-consent__text a:hover {
+  color: rgba(0, 0, 0, 0.95);
+}
+
+html[data-theme="light"] .cookie-consent__btn {
+  border-color: rgba(0, 0, 0, 0.10);
+  background: rgba(0, 0, 0, 0.05);
+  color: rgba(0, 0, 0, 0.50);
+}
+
+html[data-theme="light"] .cookie-consent__btn:hover {
+  background: rgba(0, 0, 0, 0.09);
+  color: rgba(0, 0, 0, 0.75);
+}
+
+html[data-theme="light"] .cookie-consent__btn--primary {
+  background: rgba(var(--accent-rgb), 0.90);
+  border-color: transparent;
+  color: #fff;
+}
+
+html[data-theme="light"] .cookie-consent__btn--primary:hover {
+  background: rgba(var(--accent-rgb), 1);
+  color: #fff;
+}
+
+/* ── Mobile ─────────────────────────────────────────────────────────────── */
+@media (max-width: 560px) {
+  .cookie-consent {
+    bottom: 60px;
   }
-  .cookie-consent__actions{
-    justify-content: flex-start;
+
+  .cookie-consent__card {
+    padding: 12px 14px;
+  }
+
+  .cookie-consent__row {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .cookie-consent__actions {
+    width: 100%;
+    justify-content: flex-end;
   }
 }

@@ -90,7 +90,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (!entry.isIntersecting) return;
+        const delay = entry.target._staggerDelay || 0;
+        entry.target.style.transitionDelay = delay + 'ms';
         entry.target.classList.add('reveal-in');
+        // Reset delay after animation so hover transitions aren't delayed
+        setTimeout(() => { entry.target.style.transitionDelay = ''; }, delay + 600);
         observer.unobserve(entry.target);
       });
     }, {
@@ -98,9 +102,14 @@ document.addEventListener('DOMContentLoaded', function () {
       rootMargin: '0px 0px -10% 0px'
     });
 
-    // Stagger a tiny bit for a premium feel
+    // Stagger with explicit CSS transition-delay for clean visual cascade
     cards.forEach((card, i) => {
-      setTimeout(() => observer.observe(card), i * 60);
+      const delay = i * 110;
+      setTimeout(() => {
+        observer.observe(card);
+      }, i * 40);
+      // Store delay so the observer can apply it at reveal time
+      card._staggerDelay = delay;
     });
   })();
 
@@ -717,6 +726,96 @@ document.addEventListener('DOMContentLoaded', function () {
     }, { passive: true });
 
     setActiveBySection();
+  })();
+
+  // ===== FAQ: slide-in from left on scroll =====
+  (function initFaqReveal(){
+    const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
+
+    const items = Array.from(document.querySelectorAll('.faq-item'));
+    if (items.length === 0) return;
+
+    items.forEach((item, i) => {
+      item.classList.add('reveal-ready');
+      item.style.setProperty('--faq-delay', (i * 80) + 'ms');
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('reveal-in');
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+
+    items.forEach(item => observer.observe(item));
+  })();
+
+  // ===== FAQ: smooth height accordion =====
+  (function initFaqAccordion(){
+    const items = Array.from(document.querySelectorAll('.faq-item'));
+
+    items.forEach(item => {
+      const summary = item.querySelector('summary');
+      const answer  = item.querySelector('.faq-answer');
+      if (!summary || !answer) return;
+
+      // Force block display so browser doesn't use display:none
+      answer.style.display  = 'block';
+      answer.style.overflow = 'hidden';
+      answer.style.height   = '0px';
+      item.removeAttribute('open');
+
+      summary.addEventListener('click', e => {
+        e.preventDefault();
+        const isOpen = item.hasAttribute('open');
+
+        if (!isOpen) {
+          item.setAttribute('open', '');
+          const h = answer.scrollHeight;
+          answer.style.height = h + 'px';
+          answer.addEventListener('transitionend', () => {
+            if (item.hasAttribute('open')) answer.style.height = 'auto';
+          }, { once: true });
+        } else {
+          // Snapshot current height before collapsing
+          answer.style.height = answer.scrollHeight + 'px';
+          requestAnimationFrame(() => {
+            answer.style.height = '0px';
+          });
+          answer.addEventListener('transitionend', () => {
+            item.removeAttribute('open');
+          }, { once: true });
+        }
+      });
+    });
+  })();
+
+  // ===== About section inner element reveals =====
+  (function initAboutReveal(){
+    const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
+
+    const targets = Array.from(document.querySelectorAll(
+      '.about-section .glass-card, .about-section .about-hero, .imprint-home-panel'
+    ));
+    if (targets.length === 0) return;
+
+    targets.forEach((el, i) => {
+      el.classList.add('about-reveal');
+      el.style.setProperty('--reveal-delay', (i * 90) + 'ms');
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('reveal-in');
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+
+    targets.forEach(el => observer.observe(el));
   })();
 
   // ===== Initialize =====
