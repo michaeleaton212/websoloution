@@ -52,11 +52,30 @@ html, body{
 }
 
 html{
-  background: radial-gradient(1200px 700px at 50% 30%, rgba(255,255,255,0.06), rgba(255,255,255,0) 60%),
-              linear-gradient(180deg, var(--bg1), var(--bg0));
+  background:
+    /* Thin angled accent lines — like car body panel creases */
+    repeating-linear-gradient(
+      112deg,
+      transparent 0px,
+      transparent 280px,
+      rgba(47,122,82,0.036) 280px,
+      rgba(47,122,82,0.036) 281px,
+      transparent 281px,
+      transparent 560px
+    ),
+    /* Left ambient green depth */
+    radial-gradient(ellipse 1100px 900px at -8% 35%, rgba(10,38,24,0.52) 0%, transparent 65%),
+    /* Right deep shadow */
+    radial-gradient(ellipse 700px 1000px at 108% 60%, rgba(6,14,10,0.48) 0%, transparent 65%),
+    /* Subtle top center highlight */
+    radial-gradient(ellipse 900px 500px at 55% 0%, rgba(255,255,255,0.024) 0%, transparent 60%),
+    /* Base: deep charcoal with green tint */
+    linear-gradient(165deg, #0b1410 0%, #0d1212 40%, #0e1112 70%, #080b09 100%);
   background-attachment: fixed;
   scroll-behavior: auto !important;
   scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: #252a2d transparent;
   overflow-y: auto;
   overflow-x: hidden;
   scroll-snap-type: y mandatory;
@@ -65,6 +84,14 @@ html{
   --snap-top: calc(env(safe-area-inset-top, 0px) + 86px);
   scroll-padding-top: var(--snap-top);
 }
+
+html::-webkit-scrollbar { width: 4px; }
+html::-webkit-scrollbar-track { background: transparent; }
+html::-webkit-scrollbar-thumb {
+  background: rgba(45,52,57,0.85);
+  border-radius: 999px;
+}
+html::-webkit-scrollbar-thumb:hover { background: rgba(65,74,80,0.9); }
 
 /* Services: snap to the real top (no previous section peeking above).
    We counteract html scroll-padding-top just for this section. */
@@ -80,36 +107,29 @@ html.snap-disabled{
 
 body {
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  background: radial-gradient(1200px 700px at 50% 30%, rgba(255,255,255,0.06), rgba(255,255,255,0) 60%),
-              linear-gradient(180deg, var(--bg1), var(--bg0));
+  /* Carbon-fiber micro-texture overlay on top of the html luxury gradient */
+  background:
+    repeating-linear-gradient(
+      45deg,
+      rgba(255,255,255,0.011) 0px,
+      rgba(255,255,255,0.011) 1px,
+      transparent 1px,
+      transparent 14px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(255,255,255,0.011) 0px,
+      rgba(255,255,255,0.011) 1px,
+      transparent 1px,
+      transparent 14px
+    );
   background-attachment: fixed;
   overflow: visible;
   overflow-x: hidden;
   color: var(--text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  scrollbar-width: thin;
-  scrollbar-color: #00bcd4 #f0f0f0;
   -webkit-tap-highlight-color: transparent;
-}
-
-body::-webkit-scrollbar {
-  width: 12px;
-  transition: width 0.3s;
-}
-
-body::-webkit-scrollbar-track {
-  background: #f0f0f0;
-}
-
-body::-webkit-scrollbar-thumb {
-  background: linear-gradient(90deg, #00bcd4, #2196f3);
-  border-radius: 6px;
-  transition: background 0.3s;
-}
-
-body.scrolling::-webkit-scrollbar-thumb {
-  background: linear-gradient(90deg, #2196f3, #00bcd4);
 }
 
 /* Don't let the persistent swipe hint cover CTAs while typing/inside contact */
@@ -685,6 +705,7 @@ main.page{
 
 .nav-link{
   flex: 0 0 auto;
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -696,6 +717,28 @@ main.page{
   font-size: 0.95rem;
   line-height: 1;
   border: 1px solid transparent;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 5px;
+  left: 18px;
+  right: 18px;
+  height: 1.5px;
+  background: rgba(var(--accent-rgb), 0.72);
+  border-radius: 999px;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 260ms cubic-bezier(0.22,1,0.36,1);
+}
+
+.nav-link:hover::after {
+  transform: scaleX(1);
+}
+
+@media (prefers-reduced-motion: reduce){
+  .nav-link::after { transition: none !important; }
 }
 
 .nav-link.active{
@@ -845,6 +888,17 @@ main.page{
   opacity: 0.95;
   transform: rotate(18deg);
   box-shadow: 0 60px 140px rgba(0,0,0,0.55);
+  animation: hosePulse 9s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes hosePulse {
+  0%,100% { transform: rotate(18deg) scale(1);     opacity: 0.95; }
+  50%      { transform: rotate(20deg) scale(1.018); opacity: 1;    }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .hose { animation: none !important; transform: rotate(18deg) !important; }
 }
 
 .hose::after{
@@ -1200,9 +1254,13 @@ a.hero-cta.hero-cta--ghost:active{
 }
 
 .services-feature-card:hover{
-  transform: translateY(-6px);
-  border-color: rgba(var(--accent-rgb), 0.30);
-  box-shadow: 0 34px 90px rgba(0,0,0,0.60), inset 0 1px 0 rgba(255,255,255,0.10);
+  transform: translateY(-8px);
+  border-color: rgba(var(--accent-rgb), 0.48);
+  box-shadow:
+    0 34px 90px rgba(0,0,0,0.62),
+    0 0 0 1px rgba(var(--accent-rgb), 0.16),
+    0 0 32px rgba(var(--accent-rgb), 0.14),
+    inset 0 1px 0 rgba(255,255,255,0.10);
 }
 
 .services-feature-card:hover::after{
@@ -2386,8 +2444,8 @@ input.text-input{
 .text-input::placeholder { color: rgba(255,255,255,0.45); }
 
 .text-input:focus {
-  border-color: rgba(var(--accent-rgb), 0.7);
-  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.18);
+  border-color: rgba(var(--accent-rgb), 0.78);
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.22), 0 0 22px rgba(var(--accent-rgb), 0.12);
 }
 
 .text-area { resize: vertical; min-height: 120px; }
@@ -2659,18 +2717,526 @@ input.text-input{
   padding: 16px 18px;
   font-weight: 800;
   color: rgba(255,255,255,0.92);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  user-select: none;
+}
+
+.faq-item > summary::after {
+  content: '+';
+  flex-shrink: 0;
+  font-size: 1.2rem;
+  font-weight: 300;
+  color: rgba(var(--accent-rgb), 0.75);
+  transition: transform 320ms cubic-bezier(0.22,1,0.36,1);
+  line-height: 1;
+}
+
+.faq-item[open] > summary::after {
+  transform: rotate(45deg);
 }
 
 .faq-item > summary::-webkit-details-marker{ display: none; }
 
+/* Smooth open/close via JS-managed height */
 .faq-answer{
-  padding: 0 18px 16px 18px;
+  overflow: hidden;
   color: rgba(255,255,255,0.80);
   line-height: 1.7;
+  transition: height 360ms cubic-bezier(0.22,1,0.36,1);
+  padding: 0 18px;
+}
+
+.faq-answer-inner {
+  padding-bottom: 16px;
 }
 
 /* While typing in forms (mobile keyboards), disable snap to avoid "jumping" */
 html.is-typing,
 body.is-typing{
   scroll-snap-type: none;
+}
+
+/* =====================
+   HERO WORD REVEAL
+   ===================== */
+@keyframes wordReveal {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.word-reveal {
+  display: inline-block;
+  opacity: 0;
+}
+
+body.intro-done .word-reveal {
+  animation: wordReveal 640ms cubic-bezier(0.22,1,0.36,1) both;
+  animation-delay: calc(var(--i, 0) * 140ms + 60ms);
+}
+
+@media (prefers-reduced-motion: reduce){
+  .word-reveal { opacity: 1 !important; animation: none !important; }
+}
+
+/* =====================
+   HERO PARTICLES
+   ===================== */
+.hero-particle {
+  position: absolute;
+  border-radius: 999px;
+  pointer-events: none;
+  z-index: 2;
+  width: var(--sz, 4px);
+  height: var(--sz, 4px);
+  background: rgba(255,255,255,0.60);
+  box-shadow: 0 0 10px rgba(47,122,82,0.50);
+  animation: particleFloat var(--dur, 9s) ease-in-out infinite var(--delay, 0s);
+  opacity: var(--op, 0.45);
+  top: var(--top, 50%);
+  left: var(--left, 50%);
+}
+
+@keyframes particleFloat {
+  0%,100% { transform: translate(0, 0); }
+  33%      { transform: translate(var(--dx, 12px), var(--dy, -20px)); }
+  66%      { transform: translate(calc(var(--dx,12px) * -0.5), calc(var(--dy,-20px) * 0.6)); }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .hero-particle { animation: none !important; }
+}
+
+/* =====================
+   GEO ORBIT ELEMENTS
+   ===================== */
+.geo-orbit-center {
+  position: absolute;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.geo-orbit-center--1 {
+  right: 30px;
+  top: 100px;
+}
+
+.geo-orbit-arm {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--r, 80px);
+  height: 1px;
+  transform-origin: 0 50%;
+  animation: geoArmSpin var(--dur, 16s) linear infinite;
+  animation-delay: var(--delay, 0s);
+}
+
+.geo-orbit-arm--rev {
+  animation-direction: reverse;
+}
+
+.geo-orbit-arm::after {
+  content: '';
+  position: absolute;
+  border-radius: 999px;
+  background: var(--dot-color, rgba(47,122,82,0.80));
+  box-shadow: 0 0 10px var(--glow-color, rgba(47,122,82,0.45));
+  width: var(--dot-sz, 7px);
+  height: var(--dot-sz, 7px);
+  right: calc(var(--dot-sz, 7px) / -2);
+  top: calc(var(--dot-sz, 7px) / -2);
+}
+
+@keyframes geoArmSpin {
+  to { transform: rotate(360deg); }
+}
+
+.geo-orbit-ring {
+  position: absolute;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.055);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+
+@media (prefers-reduced-motion: reduce){
+  .geo-orbit-arm { animation: none !important; }
+}
+
+/* =====================
+   FAQ SLIDE-IN FROM LEFT
+   ===================== */
+.faq-item.reveal-ready {
+  opacity: 0;
+  transform: translateX(-24px);
+  transition:
+    opacity  480ms cubic-bezier(0.22,1,0.36,1),
+    transform 480ms cubic-bezier(0.22,1,0.36,1);
+  transition-delay: var(--faq-delay, 0ms);
+}
+
+.faq-item.reveal-in {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+@media (prefers-reduced-motion: reduce){
+  .faq-item.reveal-ready { opacity: 1; transform: none; transition: none; }
+}
+
+/* =====================
+   CONTACT FORM SCALE-IN
+   ===================== */
+.contact-us-section .step-circle-container {
+  transition:
+    opacity  580ms cubic-bezier(0.22,1,0.36,1),
+    transform 580ms cubic-bezier(0.22,1,0.36,1);
+}
+
+.contact-us-section.reveal-ready .step-circle-container {
+  opacity: 0;
+  transform: scale(0.95) translateY(22px);
+}
+
+.contact-us-section.reveal-in .step-circle-container {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  transition-delay: 110ms;
+}
+
+@media (prefers-reduced-motion: reduce){
+  .contact-us-section .step-circle-container { transition: none; }
+  .contact-us-section.reveal-ready .step-circle-container { opacity: 1; transform: none; }
+}
+
+/* =====================
+   ABOUT / IMPRINT INNER REVEALS
+   ===================== */
+.about-reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity  500ms cubic-bezier(0.22,1,0.36,1),
+    transform 500ms cubic-bezier(0.22,1,0.36,1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.about-reveal.reveal-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce){
+  .about-reveal { opacity: 1; transform: none; transition: none; }
+}
+
+/* =====================================================================
+   LIQUID GLASS TOGGLES (Navbar — Dark/Light + Intro)
+   ===================================================================== */
+.navbar-sep {
+  width: 1px;
+  height: 18px;
+  background: rgba(255,255,255,0.14);
+  margin: 0 4px;
+  flex-shrink: 0;
+  align-self: center;
+}
+
+.lq-toggle {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.16);
+  -webkit-backdrop-filter: blur(14px) saturate(180%);
+  backdrop-filter: blur(14px) saturate(180%);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.16);
+  cursor: pointer;
+  transition: background 360ms ease, border-color 360ms ease, box-shadow 360ms ease;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.lq-toggle:hover {
+  background: rgba(255,255,255,0.13);
+  border-color: rgba(255,255,255,0.24);
+}
+
+.lq-toggle:focus-visible {
+  outline: 2px solid rgba(var(--accent-rgb), 0.65);
+  outline-offset: 3px;
+}
+
+/* Icon labels */
+.lq-toggle__icon {
+  font-size: 11px;
+  line-height: 1;
+  opacity: 0.75;
+  transition: opacity 300ms ease;
+}
+.lq-toggle:hover .lq-toggle__icon { opacity: 0.95; }
+
+/* The sliding pill track */
+.lq-toggle__track {
+  position: relative;
+  width: 34px;
+  height: 19px;
+  border-radius: 999px;
+  background: rgba(0,0,0,0.28);
+  border: 1px solid rgba(255,255,255,0.10);
+  display: flex;
+  align-items: center;
+  padding: 0 2px;
+  box-sizing: border-box;
+  transition: background 360ms ease;
+}
+
+/* The sliding thumb */
+.lq-toggle__thumb {
+  width: 15px;
+  height: 15px;
+  border-radius: 999px;
+  background: rgba(50,62,58,0.92);
+  box-shadow:
+    0 2px 6px rgba(0,0,0,0.50),
+    inset 0 1px 0 rgba(255,255,255,0.18);
+  transform: translateX(0);
+  /* Spring / bouncy easing — like iOS */
+  transition: transform 500ms cubic-bezier(0.34,1.56,0.64,1),
+              background  360ms ease,
+              box-shadow  360ms ease;
+  will-change: transform;
+  flex-shrink: 0;
+}
+
+/* === Active (aria-pressed="true") === */
+.lq-toggle[aria-pressed="true"] .lq-toggle__thumb {
+  transform: translateX(15px);  /* track 34 - padding 4 - thumb 15 = 15 */
+}
+
+.lq-toggle[aria-pressed="true"] .lq-toggle__track {
+  background: rgba(var(--accent-rgb), 0.35);
+  border-color: rgba(var(--accent-rgb), 0.28);
+}
+
+/* Theme toggle: light mode = bright thumb */
+#themeToggle[aria-pressed="true"] .lq-toggle__thumb {
+  background: rgba(238,244,240,0.97);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.90);
+}
+#themeToggle[aria-pressed="true"] .lq-toggle__track {
+  background: rgba(200,220,210,0.40);
+  border-color: rgba(200,220,210,0.30);
+}
+
+/* Intro toggle: on = green thumb */
+#introToggle[aria-pressed="true"] .lq-toggle__thumb {
+  background: rgba(var(--accent-rgb), 0.90);
+  box-shadow: 0 2px 8px rgba(var(--accent-rgb), 0.55), inset 0 1px 0 rgba(255,255,255,0.22);
+}
+
+/* Hide toggles + separator on narrow mobile */
+@media (max-width: 600px) {
+  .navbar-sep,
+  .lq-toggle { display: none !important; }
+}
+
+/* =====================================================================
+   LIGHT MODE — CSS OVERRIDES
+   Applied via html[data-theme="light"]
+   ===================================================================== */
+
+/* Html background */
+html[data-theme="light"] {
+  background:
+    repeating-linear-gradient(
+      112deg,
+      transparent 0px,
+      transparent 280px,
+      rgba(47,122,82,0.018) 280px,
+      rgba(47,122,82,0.018) 281px,
+      transparent 281px,
+      transparent 560px
+    ),
+    radial-gradient(ellipse 1100px 900px at -8% 35%, rgba(175,215,195,0.22) 0%, transparent 65%),
+    radial-gradient(ellipse 700px 1000px at 108% 60%, rgba(155,200,178,0.18) 0%, transparent 65%),
+    radial-gradient(ellipse 900px 500px at 55% 0%, rgba(255,255,255,0.55) 0%, transparent 60%),
+    linear-gradient(165deg, #e7eeeb 0%, #edf3ef 40%, #f0f4f1 70%, #e4ede8 100%);
+}
+
+/* Body: light carbon overlay + text color */
+html[data-theme="light"] body {
+  background:
+    repeating-linear-gradient(
+      45deg,
+      rgba(0,0,0,0.005) 0px, rgba(0,0,0,0.005) 1px, transparent 1px, transparent 14px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(0,0,0,0.005) 0px, rgba(0,0,0,0.005) 1px, transparent 1px, transparent 14px
+    );
+  color: rgba(10,16,12,0.88);
+}
+
+/* Scrollbar */
+html[data-theme="light"] { scrollbar-color: rgba(100,115,108,0.55) transparent; }
+html[data-theme="light"]::-webkit-scrollbar-thumb { background: rgba(100,115,108,0.55); }
+
+/* Navbar */
+html[data-theme="light"] .navbar-pill {
+  background: rgba(255,255,255,0.65);
+  border-color: rgba(0,0,0,0.09);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.10), inset 0 1px 0 rgba(255,255,255,0.85);
+}
+html[data-theme="light"] .nav-link               { color: rgba(12,20,14,0.65); }
+html[data-theme="light"] .nav-link.active         { color: rgba(8,16,10,0.88); background: rgba(0,0,0,0.07); border-color: rgba(0,0,0,0.10); }
+html[data-theme="light"] .nav-link::after         { background: rgba(var(--accent-rgb), 0.60); }
+html[data-theme="light"] .navbar-sep              { background: rgba(0,0,0,0.12); }
+html[data-theme="light"] .lq-toggle              { background: rgba(0,0,0,0.06); border-color: rgba(0,0,0,0.11); }
+html[data-theme="light"] .lq-toggle:hover        { background: rgba(0,0,0,0.09); }
+html[data-theme="light"] .lq-toggle__track       { background: rgba(0,0,0,0.15); border-color: rgba(0,0,0,0.10); }
+html[data-theme="light"] .lq-toggle__thumb       { background: rgba(40,55,46,0.85); }
+html[data-theme="light"] .lq-toggle__icon        { opacity: 0.65; }
+
+/* Hero */
+html[data-theme="light"] .hero-bg {
+  background:
+    radial-gradient(1200px 800px at 30% 60%, rgba(0,0,0,0.04), rgba(0,0,0,0) 62%),
+    radial-gradient(900px 700px at 70% 50%, rgba(0,0,0,0.02), rgba(0,0,0,0) 60%),
+    linear-gradient(180deg, rgba(222,238,228,1), rgba(210,232,220,1));
+}
+html[data-theme="light"] .hose { opacity: 0.55; }
+html[data-theme="light"] .hero-eyebrow           { color: rgba(10,16,12,0.60); }
+html[data-theme="light"] .hero-title             { color: rgba(8,14,10,0.90); }
+html[data-theme="light"] .hero-sub               { color: rgba(10,16,12,0.62); }
+html[data-theme="light"] .hero-offer-pill        { color: rgba(10,16,12,0.68); }
+html[data-theme="light"] a.hero-cta:not(.hero-cta--ghost) {
+  background: rgba(var(--accent-rgb), 0.78);
+  border-color: rgba(var(--accent-rgb), 0.88);
+  color: rgba(255,255,255,0.95);
+}
+html[data-theme="light"] a.hero-cta.hero-cta--ghost {
+  background: rgba(0,0,0,0.07);
+  border-color: rgba(0,0,0,0.16);
+  color: rgba(10,16,12,0.75);
+  box-shadow: none;
+}
+
+/* Cards — services, seo-geo, faq, about */
+html[data-theme="light"] .services-feature-card,
+html[data-theme="light"] .seo-geo-card,
+html[data-theme="light"] .faq-item,
+html[data-theme="light"] .imprint-home-panel,
+html[data-theme="light"] .glass-card,
+html[data-theme="light"] .step-circle-container {
+  background: rgba(255,255,255,0.72) !important;
+  border-color: rgba(0,0,0,0.08) !important;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.88) !important;
+}
+
+html[data-theme="light"] .services-eyebrow,
+html[data-theme="light"] .seo-geo-eyebrow         { color: rgba(10,16,12,0.52); }
+html[data-theme="light"] .services-title,
+html[data-theme="light"] .section-title           { color: rgba(8,14,10,0.88); }
+html[data-theme="light"] .services-sub,
+html[data-theme="light"] .seo-geo-sub,
+html[data-theme="light"] .section-lead            { color: rgba(10,16,12,0.62); }
+html[data-theme="light"] .services-feature-kicker,
+html[data-theme="light"] .seo-geo-card-kicker     { color: rgba(10,16,12,0.50); }
+html[data-theme="light"] .services-feature-title,
+html[data-theme="light"] .seo-geo-card-title      { color: rgba(8,14,10,0.88); }
+html[data-theme="light"] .services-feature-text,
+html[data-theme="light"] .seo-geo-card-text       { color: rgba(10,16,12,0.64); }
+html[data-theme="light"] .services-feature-footer { color: rgba(10,16,12,0.55); }
+html[data-theme="light"] .services-feature-arrow {
+  background: rgba(0,0,0,0.06);
+  border-color: rgba(0,0,0,0.09);
+  color: rgba(10,16,12,0.72);
+}
+html[data-theme="light"] .services-feature-card:hover {
+  border-color: rgba(var(--accent-rgb), 0.35) !important;
+  box-shadow: 0 18px 50px rgba(0,0,0,0.12), 0 0 0 1px rgba(var(--accent-rgb),0.12), 0 0 22px rgba(var(--accent-rgb),0.08) !important;
+}
+
+/* FAQ */
+html[data-theme="light"] .faq-item > summary  { color: rgba(8,14,10,0.88); }
+html[data-theme="light"] .faq-answer          { color: rgba(10,16,12,0.68); }
+html[data-theme="light"] .faq-item[open] > summary::after { color: rgba(var(--accent-rgb), 0.80); }
+
+/* Contact / steps */
+html[data-theme="light"] .step-default h3     { color: rgba(8,14,10,0.88); }
+html[data-theme="light"] .step-default p      { color: rgba(10,16,12,0.72); }
+html[data-theme="light"] .muted               { color: rgba(10,16,12,0.52); }
+html[data-theme="light"] .inline-link         { color: rgba(8,14,10,0.88); border-bottom-color: rgba(var(--accent-rgb),0.45); }
+html[data-theme="light"] .next-button         { background: rgba(var(--accent-rgb), 0.82); }
+html[data-theme="light"] .back-button         { color: rgba(10,16,12,0.52); background: rgba(0,0,0,0.05); border-color: rgba(0,0,0,0.09); }
+html[data-theme="light"] .back-button:hover   { color: rgba(10,16,12,0.78); }
+html[data-theme="light"] .step-connector      { background: rgba(0,0,0,0.10); }
+html[data-theme="light"] .text-input          { background: rgba(0,0,0,0.04); border-color: rgba(0,0,0,0.13); color: rgba(8,14,10,0.88); }
+html[data-theme="light"] .text-input::placeholder { color: rgba(10,16,12,0.36); }
+html[data-theme="light"] .text-input:focus    { border-color: rgba(var(--accent-rgb),0.65); box-shadow: 0 0 0 3px rgba(var(--accent-rgb),0.16); }
+
+/* About / imprint */
+html[data-theme="light"] .about-section .mission-section h3 { color: rgba(8,14,10,0.88); }
+html[data-theme="light"] .about-section .mission-section p  { color: rgba(10,16,12,0.78); }
+html[data-theme="light"] .imprint-home-strong  { color: rgba(8,14,10,0.88); }
+html[data-theme="light"] .imprint-home-kicker  { color: rgba(10,16,12,0.50); }
+html[data-theme="light"] .imprint-home-lines,
+html[data-theme="light"] .imprint-home-bullets { color: rgba(10,16,12,0.68); }
+html[data-theme="light"] .imprint-home-chip {
+  color: rgba(8,14,10,0.82);
+  background: rgba(var(--accent-rgb), 0.14);
+  border-color: rgba(var(--accent-rgb), 0.24);
+}
+
+/* Swipe hint */
+html[data-theme="light"] #swipeHint .swipeHint-inner {
+  background: rgba(0,0,0,0.08);
+  border-color: rgba(0,0,0,0.11);
+  color: rgba(10,16,12,0.65);
+}
+html[data-theme="light"] #swipeHint .swipeHint-bar { background: rgba(0,0,0,0.18); }
+
+/* Smooth global theme transition — applied briefly via JS class */
+html.theme-switching,
+html.theme-switching body,
+html.theme-switching .navbar-pill,
+html.theme-switching .nav-link,
+html.theme-switching .nav-link::after,
+html.theme-switching .lq-toggle,
+html.theme-switching .lq-toggle__track,
+html.theme-switching .hero-bg,
+html.theme-switching .hero-title,
+html.theme-switching .hero-eyebrow,
+html.theme-switching .hero-sub,
+html.theme-switching .hose,
+html.theme-switching .services-feature-card,
+html.theme-switching .seo-geo-card,
+html.theme-switching .faq-item,
+html.theme-switching .step-circle-container,
+html.theme-switching .imprint-home-panel,
+html.theme-switching .glass-card,
+html.theme-switching .text-input,
+html.theme-switching .section-title,
+html.theme-switching .services-title,
+html.theme-switching .services-sub,
+html.theme-switching .seo-geo-sub,
+html.theme-switching .section-lead,
+html.theme-switching .muted,
+html.theme-switching .step-default h3,
+html.theme-switching .step-default p,
+html.theme-switching a.hero-cta {
+  transition:
+    background     440ms ease,
+    background-color 440ms ease,
+    color          440ms ease,
+    border-color   440ms ease,
+    box-shadow     440ms ease,
+    opacity        440ms ease !important;
 }

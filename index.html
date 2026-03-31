@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
+  <!-- Theme init: runs synchronously to prevent FOUC on light mode -->
+  <script>!function(){var t=localStorage.getItem('ws-theme');if(t==='light')document.documentElement.setAttribute('data-theme','light');}();</script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Websolutions Rafz – Webdesign, SEO &amp; GEO (Schweiz)</title>
@@ -33,6 +35,7 @@
   <link rel="icon" type="image/png" href="favicon.png" />
 
   <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="partials/cookie-consent.css" data-cookie-consent-style="1" />
 
   <!-- Structured Data (GEO/SEO): Organization + Local Business + FAQ -->
   <script type="application/ld+json">
@@ -127,6 +130,61 @@
 </head>
 
 <body>
+  <!-- ===== Theme & Intro toggles init (runs before first paint) ===== -->
+  <script>
+    (function () {
+      // ── Dark / Light Mode ──────────────────────────────────────────────
+      var themeBtn = document.getElementById('themeToggle');
+      var currentTheme = localStorage.getItem('ws-theme') || 'dark';
+
+      function applyTheme(theme, animate) {
+        var html = document.documentElement;
+        if (animate) {
+          html.classList.add('theme-switching');
+          setTimeout(function () { html.classList.remove('theme-switching'); }, 480);
+        }
+        if (theme === 'light') {
+          html.setAttribute('data-theme', 'light');
+        } else {
+          html.removeAttribute('data-theme');
+        }
+        if (themeBtn) themeBtn.setAttribute('aria-pressed', theme === 'light' ? 'true' : 'false');
+        localStorage.setItem('ws-theme', theme);
+        currentTheme = theme;
+      }
+
+      // Set initial pressed state (theme already applied via head script)
+      if (themeBtn) {
+        themeBtn.setAttribute('aria-pressed', currentTheme === 'light' ? 'true' : 'false');
+        themeBtn.addEventListener('click', function () {
+          applyTheme(currentTheme === 'light' ? 'dark' : 'light', true);
+        });
+      }
+
+      // ── Intro Animation Toggle ─────────────────────────────────────────
+      var introBtn = document.getElementById('introToggle');
+      // Default: intro enabled (null / '1' = on, '0' = off)
+      var introEnabled = localStorage.getItem('ws-intro-enabled');
+      var introOn = (introEnabled !== '0');
+
+      function applyIntroToggle(on) {
+        introOn = on;
+        localStorage.setItem('ws-intro-enabled', on ? '1' : '0');
+        if (introBtn) introBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      }
+
+      if (introBtn) {
+        introBtn.setAttribute('aria-pressed', introOn ? 'true' : 'false');
+        introBtn.addEventListener('click', function () {
+          applyIntroToggle(!introOn);
+        });
+      }
+
+      // Expose so shouldShowOverlay can read it
+      window._wsIntroEnabled = function () { return introOn; };
+    })();
+  </script>
+
   <!-- Intro Overlay (verdeckt nur den Content, Background bleibt sichtbar) -->
   <div id="introOverlay" tabindex="0" aria-label="Intro Overlay">
     <div id="marqueeRows" aria-hidden="true"></div>
@@ -157,13 +215,36 @@
           <a class="nav-link" href="#seo-geo">SEO &amp; GEO</a>
           <a class="nav-link" href="#contact-us">Contact us</a>
           <a class="nav-link" href="#imprint">Imprint</a>
+          <span class="navbar-sep" aria-hidden="true"></span>
+          <button class="lq-toggle" id="themeToggle" type="button"
+                  aria-label="Dark / Light Mode umschalten" aria-pressed="false"
+                  title="Dark / Light Mode">
+            <span class="lq-toggle__track">
+              <span class="lq-toggle__thumb"></span>
+            </span>
+          </button>
+          <button class="lq-toggle" id="introToggle" type="button"
+                  aria-label="Intro-Animation ein/aus" aria-pressed="true"
+                  title="Intro-Animation">
+            <span class="lq-toggle__track">
+              <span class="lq-toggle__thumb"></span>
+            </span>
+          </button>
         </nav>
       </div>
 
       <main class="page premium-fadein">
         <!-- HERO -->
         <section class="hero" id="heroStage">
-          <div class="hero-bg" aria-hidden="true"></div>
+          <div class="hero-bg" aria-hidden="true">
+            <span class="hero-particle" style="--sz:3px;--op:0.55;--top:28%;--left:62%;--dur:8s;--delay:-1s;--dx:14px;--dy:-22px;" aria-hidden="true"></span>
+            <span class="hero-particle" style="--sz:5px;--op:0.30;--top:58%;--left:74%;--dur:11s;--delay:-4s;--dx:-16px;--dy:-14px;" aria-hidden="true"></span>
+            <span class="hero-particle" style="--sz:2px;--op:0.60;--top:18%;--left:55%;--dur:7s;--delay:-2s;--dx:10px;--dy:-26px;" aria-hidden="true"></span>
+            <span class="hero-particle" style="--sz:4px;--op:0.38;--top:72%;--left:66%;--dur:13s;--delay:-6s;--dx:-12px;--dy:-18px;" aria-hidden="true"></span>
+            <span class="hero-particle" style="--sz:3px;--op:0.48;--top:42%;--left:82%;--dur:9s;--delay:-3s;--dx:16px;--dy:-20px;" aria-hidden="true"></span>
+            <span class="hero-particle" style="--sz:2px;--op:0.42;--top:34%;--left:48%;--dur:12s;--delay:-8s;--dx:-8px;--dy:-28px;" aria-hidden="true"></span>
+            <span class="hero-particle" style="--sz:4px;--op:0.32;--top:65%;--left:58%;--dur:10s;--delay:-5s;--dx:20px;--dy:-12px;" aria-hidden="true"></span>
+          </div>
 
           <div class="hero-shell hero-shell--single">
             <div class="hero-copy">
@@ -173,7 +254,11 @@
                 <span class="hero-offer-pill"><span class="grad-shift">SEO &amp; GEO</span></span>
               </div>
 
-              <h1 class="hero-title">Make your business visible
+              <h1 class="hero-title">
+                <span class="word-reveal" style="--i:0">Make</span>
+                <span class="word-reveal" style="--i:1">your</span>
+                <span class="word-reveal" style="--i:2">business</span>
+                <span class="word-reveal" style="--i:3">visible</span>
               </h1>
               <p class="hero-sub">Webdesign, SEO, Branding und Wartung – klar, schnell und wartbar umgesetzt.</p>
 
@@ -270,6 +355,15 @@
               <span class="geo-pin geo-pin--3"></span>
               <span class="geo-ring geo-ring--1"></span>
               <span class="geo-ring geo-ring--2"></span>
+              <!-- Orbiting dot system -->
+              <div class="geo-orbit-center geo-orbit-center--1">
+                <span class="geo-orbit-arm" style="--r:70px;--dur:14s;--dot-color:rgba(47,122,82,0.85);--glow-color:rgba(47,122,82,0.42);--dot-sz:7px;--delay:0s;"></span>
+                <span class="geo-orbit-arm geo-orbit-arm--rev" style="--r:105px;--dur:22s;--dot-color:rgba(82,39,255,0.65);--glow-color:rgba(82,39,255,0.32);--dot-sz:5px;--delay:-6s;"></span>
+                <span class="geo-orbit-arm" style="--r:140px;--dur:33s;--dot-color:rgba(0,188,212,0.52);--glow-color:rgba(0,188,212,0.28);--dot-sz:4px;--delay:-12s;"></span>
+                <span class="geo-orbit-ring" style="width:140px;height:140px;"></span>
+                <span class="geo-orbit-ring" style="width:210px;height:210px;"></span>
+                <span class="geo-orbit-ring" style="width:280px;height:280px;"></span>
+              </div>
             </div>
           </div>
         </section>
@@ -616,35 +710,45 @@
               <details class="faq-item">
                 <summary>Was macht Websolutions konkret?</summary>
                 <div class="faq-answer">
-                  <p>Wir erstellen Websites (Design + Umsetzung), setzen technisches SEO um und optimieren Inhalte für KI-Suche (GEO). Zusätzlich übernehmen wir Hosting, Wartung und Support.</p>
+                  <div class="faq-answer-inner">
+                    <p>Wir erstellen Websites (Design + Umsetzung), setzen technisches SEO um und optimieren Inhalte für KI-Suche (GEO). Zusätzlich übernehmen wir Hosting, Wartung und Support.</p>
+                  </div>
                 </div>
               </details>
 
               <details class="faq-item">
                 <summary>Für welche Region arbeitet ihr?</summary>
                 <div class="faq-answer">
-                  <p>Wir sitzen in Rafz (ZH) und arbeiten für Unternehmen in der Schweiz – besonders in der Region Zürich und Umgebung.</p>
+                  <div class="faq-answer-inner">
+                    <p>Wir sitzen in Rafz (ZH) und arbeiten für Unternehmen in der Schweiz – besonders in der Region Zürich und Umgebung.</p>
+                  </div>
                 </div>
               </details>
 
               <details class="faq-item">
                 <summary>Was bedeutet GEO (Generative Engine Optimization)?</summary>
                 <div class="faq-answer">
-                  <p>GEO ist Optimierung für KI-Suche (z.B. ChatGPT, Perplexity, Google AI Overviews): klare Struktur, zitierfähige Aussagen, FAQs und saubere Entitäten/Topics, damit KI-Systeme Inhalte korrekt verstehen und wiedergeben.</p>
+                  <div class="faq-answer-inner">
+                    <p>GEO ist Optimierung für KI-Suche (z.B. ChatGPT, Perplexity, Google AI Overviews): klare Struktur, zitierfähige Aussagen, FAQs und saubere Entitäten/Topics, damit KI-Systeme Inhalte korrekt verstehen und wiedergeben.</p>
+                  </div>
                 </div>
               </details>
 
               <details class="faq-item">
                 <summary>Bietet ihr auch Hosting und Wartung an?</summary>
                 <div class="faq-answer">
-                  <p>Ja. Wir übernehmen Domain/SSL, Performance-Setup sowie Updates, Backups und laufende Anpassungen – damit die Website dauerhaft schnell und sicher bleibt.</p>
+                  <div class="faq-answer-inner">
+                    <p>Ja. Wir übernehmen Domain/SSL, Performance-Setup sowie Updates, Backups und laufende Anpassungen – damit die Website dauerhaft schnell und sicher bleibt.</p>
+                  </div>
                 </div>
               </details>
 
               <details class="faq-item">
                 <summary>Wie kann ich euch kontaktieren?</summary>
                 <div class="faq-answer">
-                  <p>Über das Formular auf dieser Seite oder per E-Mail an <a class="inline-link" href="mailto:info@websolutions.ch">info@websolutions.ch</a> bzw. telefonisch unter <a class="inline-link" href="tel:+41794534169">+41 79 453 41 69</a>.</p>
+                  <div class="faq-answer-inner">
+                    <p>Über das Formular auf dieser Seite oder per E-Mail an <a class="inline-link" href="mailto:info@websolutions.ch">info@websolutions.ch</a> bzw. telefonisch unter <a class="inline-link" href="tel:+41794534169">+41 79 453 41 69</a>.</p>
+                  </div>
                 </div>
               </details>
             </div>
@@ -812,7 +916,6 @@
       const ROWS = 6;
       const BASE_DUR = 11;
       const DUR_STEP = 1.6;
-      const STORAGE_KEY = "introDismissed";
 
       let rafId = 0;
       let tx = -9999, ty = -9999;  // target
@@ -855,14 +958,11 @@
       }
 
       function shouldShowOverlay() {
-        const qs = new URLSearchParams(location.search);
-        if (qs.has("intro")) return true; // z.B. ?intro erzwingt Anzeige
-        try { return localStorage.getItem(STORAGE_KEY) !== "1"; }
-        catch (e) { return true; }
-      }
-
-      function setDismissed() {
-        try { localStorage.setItem(STORAGE_KEY, "1"); } catch (e) {}
+        // Respect the intro toggle (default: on)
+        if (typeof window._wsIntroEnabled === 'function') {
+          return window._wsIntroEnabled();
+        }
+        return true;
       }
 
       function makeRow(i) {
@@ -926,11 +1026,11 @@
       function dismissOverlay() {
         stopCursor();
         overlay.style.opacity = "0";
-        setDismissed();
         window.setTimeout(() => {
           overlay.setAttribute("aria-hidden", "true");
           overlay.style.display = "none";
           showContent();
+          document.body.classList.add("intro-done");
         }, 180);
       }
 
