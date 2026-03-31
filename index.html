@@ -130,12 +130,14 @@
 </head>
 
 <body>
-  <!-- ===== Theme & Intro toggles init (runs before first paint) ===== -->
+  <!-- ===== Theme & Intro toggles init ===== -->
   <script>
     (function () {
-      // ── Dark / Light Mode ──────────────────────────────────────────────
-      var themeBtn = document.getElementById('themeToggle');
       var currentTheme = localStorage.getItem('ws-theme') || 'dark';
+      var introOn = (localStorage.getItem('ws-intro-enabled') !== '0');
+
+      // Exposed immediately — intro overlay script reads this before DOMContentLoaded
+      window._wsIntroEnabled = function () { return introOn; };
 
       function applyTheme(theme, animate) {
         var html = document.documentElement;
@@ -143,45 +145,39 @@
           html.classList.add('theme-switching');
           setTimeout(function () { html.classList.remove('theme-switching'); }, 480);
         }
-        if (theme === 'light') {
-          html.setAttribute('data-theme', 'light');
-        } else {
-          html.removeAttribute('data-theme');
-        }
-        if (themeBtn) themeBtn.setAttribute('aria-pressed', theme === 'light' ? 'true' : 'false');
+        if (theme === 'light') { html.setAttribute('data-theme', 'light'); }
+        else { html.removeAttribute('data-theme'); }
+        var btn = document.getElementById('themeToggle');
+        if (btn) btn.setAttribute('aria-pressed', theme === 'light' ? 'true' : 'false');
         localStorage.setItem('ws-theme', theme);
         currentTheme = theme;
       }
 
-      // Set initial pressed state (theme already applied via head script)
-      if (themeBtn) {
-        themeBtn.setAttribute('aria-pressed', currentTheme === 'light' ? 'true' : 'false');
-        themeBtn.addEventListener('click', function () {
-          applyTheme(currentTheme === 'light' ? 'dark' : 'light', true);
-        });
-      }
-
-      // ── Intro Animation Toggle ─────────────────────────────────────────
-      var introBtn = document.getElementById('introToggle');
-      // Default: intro enabled (null / '1' = on, '0' = off)
-      var introEnabled = localStorage.getItem('ws-intro-enabled');
-      var introOn = (introEnabled !== '0');
-
       function applyIntroToggle(on) {
         introOn = on;
         localStorage.setItem('ws-intro-enabled', on ? '1' : '0');
-        if (introBtn) introBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+        var btn = document.getElementById('introToggle');
+        if (btn) btn.setAttribute('aria-pressed', on ? 'true' : 'false');
       }
 
-      if (introBtn) {
-        introBtn.setAttribute('aria-pressed', introOn ? 'true' : 'false');
-        introBtn.addEventListener('click', function () {
-          applyIntroToggle(!introOn);
-        });
-      }
+      // Bind click handlers after the navbar HTML exists
+      document.addEventListener('DOMContentLoaded', function () {
+        var themeBtn = document.getElementById('themeToggle');
+        if (themeBtn) {
+          themeBtn.setAttribute('aria-pressed', currentTheme === 'light' ? 'true' : 'false');
+          themeBtn.addEventListener('click', function () {
+            applyTheme(currentTheme === 'light' ? 'dark' : 'light', true);
+          });
+        }
 
-      // Expose so shouldShowOverlay can read it
-      window._wsIntroEnabled = function () { return introOn; };
+        var introBtn = document.getElementById('introToggle');
+        if (introBtn) {
+          introBtn.setAttribute('aria-pressed', introOn ? 'true' : 'false');
+          introBtn.addEventListener('click', function () {
+            applyIntroToggle(!introOn);
+          });
+        }
+      });
     })();
   </script>
 
