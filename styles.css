@@ -3102,6 +3102,11 @@ body.intro-done .word-reveal {
    Applied via html[data-theme="light"]
    ===================================================================== */
 
+/* Intro overlay always dark regardless of theme */
+html[data-theme="light"] #introOverlay {
+  background: linear-gradient(168deg, #0b1410 0%, #080b09 100%);
+}
+
 /* Html background */
 html[data-theme="light"] {
   background:
