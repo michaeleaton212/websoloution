@@ -1,0 +1,47 @@
+# ===========================
+# SECRETS & CREDENTIALS — never commit these!
+# ===========================
+.env
+.env.local
+.env.*.local
+*.env
+*.pem
+*.key
+*.p12
+*.pfx
+secrets.json
+credentials.json
+config.secret.*
+auth.json
+
+# ===========================
+# Node / build artifacts
+# ===========================
+node_modules/
+dist/
+build/
+.cache/
+*.log
+npm-debug.log*
+yarn-error.log*
+
+# ===========================
+# OS files
+# ===========================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ===========================
+# Editor folders
+# ===========================
+.vscode/settings.json
+.idea/
+
+# ===========================
+# Deployment / service configs with tokens
+# ===========================
+.netlify/
+vercel.json
+firebase.json
+.firebaserc
