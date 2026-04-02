@@ -218,21 +218,11 @@ document.addEventListener('DOMContentLoaded', function () {
   const pricingSection = document.getElementById('pricing');
 
   function getFixedHeaderOffset(){
+    // On mobile (bottom nav), no top offset needed
+    if (window.innerWidth <= 600) return 0;
     const nav = document.querySelector('.navbar-container');
     const navH = nav ? nav.getBoundingClientRect().height : 0;
     return Math.ceil(navH + 16);
-  }
-
-  // CSS Scroll Snap is great for manual scrolling, but it can fight with
-  // programmatic smooth scrolling (anchor clicks / wheel assist) and cause
-  // an extra "snap" jump. We temporarily disable snap during those scrolls.
-  function temporarilyDisableScrollSnap(durationMs){
-    const root = document.documentElement;
-    root.classList.add('snap-disabled');
-    if (temporarilyDisableScrollSnap._t) window.clearTimeout(temporarilyDisableScrollSnap._t);
-    temporarilyDisableScrollSnap._t = window.setTimeout(() => {
-      root.classList.remove('snap-disabled');
-    }, Math.max(0, durationMs || 0));
   }
 
   function scrollToId(targetId){
@@ -240,328 +230,47 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!targetElement) return;
 
     const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    // Most sections should land below the fixed navbar.
-    // Services (#pricing) should land at the real viewport top (no previous section visible).
-    const headerOffset = targetId === 'pricing' ? 0 : getFixedHeaderOffset();
+    const isMobile = window.innerWidth <= 600;
+    const headerOffset = isMobile ? 0 : (targetId === 'pricing' ? 0 : getFixedHeaderOffset());
     const top = window.scrollY + targetElement.getBoundingClientRect().top - headerOffset;
 
-    // Prevent snap from overriding the intended landing position.
-    temporarilyDisableScrollSnap(prefersReducedMotion ? 0 : 900);
-    window.scrollTo({ top, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+    // Enhanced smooth scrolling with easing
+    if (prefersReducedMotion) {
+      window.scrollTo({ top, behavior: 'auto' });
+      return;
+    }
+
+    // Custom smooth scroll with easing for better feel
+    const startY = window.scrollY;
+    const targetY = top;
+    const distance = targetY - startY;
+    const duration = Math.min(Math.abs(distance) * 0.5, 1200); // Max 1.2s
+    
+    let startTime = null;
+
+    function easeInOutCubic(t) {
+      return t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
+    }
+
+    function animateScroll(currentTime) {
+      if (startTime === null) startTime = currentTime;
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const easedProgress = easeInOutCubic(progress);
+      
+      window.scrollTo(0, startY + (distance * easedProgress));
+      
+      if (progress < 1) {
+        requestAnimationFrame(animateScroll);
+      }
+    }
+
+    requestAnimationFrame(animateScroll);
   }
 
-  // Mouse wheel assist: one wheel step -> next/prev section (keeps scrolling comfortable)
-  // Applies mainly to classic mouse wheels (deltaMode === 1). Trackpads keep native scrolling.
-  (function initMouseWheelSnapAssist(){
-    const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    let isAutoScrolling = false;
-    let autoScrollTimer = 0;
+  // Mouse wheel / trackpad: native smooth scrolling only (no snap hijacking)
 
-    function getSections(){
-      return Array.from(document.querySelectorAll('main.page > section'));
-    }
-
-    function getCurrentSection(sections){
-      const y = window.scrollY + getFixedHeaderOffset() + 2;
-      let current = sections[0] || null;
-      for (let i = 0; i < sections.length; i++) {
-        const sec = sections[i];
-        if (sec.offsetTop <= y) current = sec;
-        else break;
-      }
-      return current;
-    }
-
-    function sectionTopY(section){
-      return window.scrollY + section.getBoundingClientRect().top;
-    }
-
-    function findTargetIndex(list, dir, headerOffset){
-      const y = window.scrollY + (typeof headerOffset === 'number' ? headerOffset : getFixedHeaderOffset()) + 2;
-
-      if (dir > 0) {
-        const idx = list.findIndex(sec => sec.offsetTop > y);
-        return idx === -1 ? (list.length - 1) : idx;
-      }
-
-      for (let i = list.length - 1; i >= 0; i--) {
-        if (list[i].offsetTop < (y - 10)) return i;
-      }
-      return 0;
-    }
-
-    function scrollToSection(section){
-      const headerOffset = section.id === 'pricing' ? 0 : getFixedHeaderOffset();
-      const top = sectionTopY(section) - headerOffset;
-
-      // Prevent snap from adding a second jump after the smooth scroll.
-      temporarilyDisableScrollSnap(prefersReducedMotion ? 0 : 900);
-      window.scrollTo({ top, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
-    }
-
-    window.addEventListener('wheel', (e) => {
-      // Let browser zoom gestures pass through
-      if (e.ctrlKey) return;
-
-      // Disable while typing (mobile keyboard) or inside form fields
-      if (document.body.classList.contains('is-typing') || document.documentElement.classList.contains('is-typing')) return;
-      const targetEl = (e.target instanceof Element) ? e.target : null;
-      const interactiveEl = targetEl ? targetEl.closest('input, textarea, select, [contenteditable="true"]') : null;
-      if (interactiveEl) {
-        // If the control is focused (user is typing) or it can scroll internally,
-        // don't hijack the wheel.
-        const isFocused = document.activeElement === interactiveEl;
-        const canScrollInternally = (
-          interactiveEl instanceof HTMLElement &&
-          interactiveEl.scrollHeight > (interactiveEl.clientHeight + 2)
-        );
-        if (isFocused || canScrollInternally) return;
-      }
-
-      // Only activate for mouse wheels (line-based) or very large deltas
-      const isMouseWheel = e.deltaMode === 1;
-      const isLargeDelta = Math.abs(e.deltaY) >= 80;
-      if (!isMouseWheel && !isLargeDelta) return;
-
-      const sections = getSections();
-      if (sections.length < 2) return;
-
-      const currentSection = getCurrentSection(sections);
-      const currentHeaderOffset = (currentSection && currentSection.id === 'pricing') ? 0 : getFixedHeaderOffset();
-      if (currentSection) {
-        // If a section is taller than the viewport, allow normal scrolling inside it.
-        const tooTall = currentSection.scrollHeight > (window.innerHeight + 24);
-        const isImprintArea = currentSection.id === 'imprint';
-
-        // Never force snap-jumps in the imprint area.
-        // Contact stays enabled so one mouse-wheel step can move to the next section.
-        if (isImprintArea) return;
-
-        // If a section is taller than the viewport (common when padding/fonts vary),
-        // we still want the "one wheel step -> next section" behavior when the
-        // section is currently aligned at the top (i.e. user is at the start).
-        // Otherwise, let the browser do normal scrolling within the tall section.
-        if (tooTall) {
-          const rect = currentSection.getBoundingClientRect();
-          // A section can be considered "top aligned" in two valid states:
-          // 1) Our programmatic scroll lands it just below the fixed navbar (offset).
-          // 2) The initial page load at scrollY=0 where the first section starts at 0.
-          const offset = getFixedHeaderOffset();
-          const topAligned =
-            Math.min(
-              Math.abs(rect.top - offset),
-              Math.abs(rect.top)
-            ) <= 14;
-          if (!topAligned) return;
-        }
-      }
-
-      // Throttle during smooth scroll so we don't queue multiple jumps
-      if (isAutoScrolling) {
-        e.preventDefault();
-        return;
-      }
-
-      const dir = e.deltaY > 0 ? 1 : -1;
-      const idx = findTargetIndex(sections, dir, currentHeaderOffset);
-      const section = sections[idx];
-      if (!section) return;
-
-      e.preventDefault();
-      isAutoScrolling = true;
-      scrollToSection(section);
-
-      if (autoScrollTimer) window.clearTimeout(autoScrollTimer);
-      autoScrollTimer = window.setTimeout(() => {
-        isAutoScrolling = false;
-      }, prefersReducedMotion ? 200 : 700);
-    }, { passive: false });
-  })();
-
-  // Touch/Swipe assist (mobile): one vertical swipe -> next/prev section.
-  // We do NOT block native scrolling; we only "finish" the gesture by snapping
-  // to the next/previous section after the swipe ends.
-  (function initTouchSwipeSnapAssist(){
-    const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReducedMotion) return;
-
-    let isAutoScrolling = false;
-    let autoScrollTimer = 0;
-
-    let startX = 0;
-    let startY = 0;
-    let startTime = 0;
-    let pointerActive = false;
-
-    function getSections(){
-      return Array.from(document.querySelectorAll('main.page > section'));
-    }
-
-    function getCurrentSection(sections){
-      const y = window.scrollY + getFixedHeaderOffset() + 2;
-      let current = sections[0] || null;
-      for (let i = 0; i < sections.length; i++) {
-        const sec = sections[i];
-        if (sec.offsetTop <= y) current = sec;
-        else break;
-      }
-      return current;
-    }
-
-    function sectionTopY(section){
-      return window.scrollY + section.getBoundingClientRect().top;
-    }
-
-    function findTargetIndex(list, dir, headerOffset){
-      const y = window.scrollY + (typeof headerOffset === 'number' ? headerOffset : getFixedHeaderOffset()) + 2;
-
-      if (dir > 0) {
-        const idx = list.findIndex(sec => sec.offsetTop > y);
-        return idx === -1 ? (list.length - 1) : idx;
-      }
-
-      for (let i = list.length - 1; i >= 0; i--) {
-        if (list[i].offsetTop < (y - 10)) return i;
-      }
-      return 0;
-    }
-
-    function scrollToSection(section){
-      const headerOffset = section.id === 'pricing' ? 0 : getFixedHeaderOffset();
-      const top = sectionTopY(section) - headerOffset;
-      temporarilyDisableScrollSnap(900);
-      window.scrollTo({ top, behavior: 'smooth' });
-    }
-
-    function isBusyTyping(){
-      return document.body.classList.contains('is-typing') || document.documentElement.classList.contains('is-typing');
-    }
-
-    function shouldIgnoreStartTarget(target){
-      const targetEl = (target instanceof Element) ? target : null;
-      if (!targetEl) return false;
-      const interactiveEl = targetEl.closest('input, textarea, select, [contenteditable="true"]');
-      if (!interactiveEl) return false;
-
-      const isFocused = document.activeElement === interactiveEl;
-      const canScrollInternally = (
-        interactiveEl instanceof HTMLElement &&
-        interactiveEl.scrollHeight > (interactiveEl.clientHeight + 2)
-      );
-
-      return isFocused || canScrollInternally;
-    }
-
-    function maybeSnapBySwipe(dir){
-      const sections = getSections();
-      if (sections.length < 2) return;
-
-      const currentSection = getCurrentSection(sections);
-      if (!currentSection) return;
-
-      // Never force snap-jumps in the imprint area.
-      if (currentSection.id === 'imprint') return;
-
-      // If a section is taller than the viewport, allow normal scrolling inside it
-      // unless it's currently aligned at the top.
-      const currentHeaderOffset = (currentSection.id === 'pricing') ? 0 : getFixedHeaderOffset();
-      const tooTall = currentSection.scrollHeight > (window.innerHeight + 24);
-      if (tooTall) {
-        const rect = currentSection.getBoundingClientRect();
-        const offset = getFixedHeaderOffset();
-        const topAligned = Math.min(Math.abs(rect.top - offset), Math.abs(rect.top)) <= 14;
-        if (!topAligned) return;
-      }
-
-      if (isAutoScrolling) return;
-
-      const idx = findTargetIndex(sections, dir, currentHeaderOffset);
-      const section = sections[idx];
-      if (!section) return;
-
-      isAutoScrolling = true;
-      scrollToSection(section);
-
-      if (autoScrollTimer) window.clearTimeout(autoScrollTimer);
-      autoScrollTimer = window.setTimeout(() => {
-        isAutoScrolling = false;
-      }, 800);
-    }
-
-    // Prefer Pointer Events when available (covers most modern mobile browsers)
-    const supportsPointer = 'PointerEvent' in window;
-
-    if (supportsPointer) {
-      window.addEventListener('pointerdown', (e) => {
-        if (!e || e.pointerType !== 'touch') return;
-        if (e.ctrlKey) return;
-        if (isBusyTyping()) return;
-        if (shouldIgnoreStartTarget(e.target)) return;
-
-        pointerActive = true;
-        startX = e.clientX;
-        startY = e.clientY;
-        startTime = performance.now();
-      }, { passive: true });
-
-      window.addEventListener('pointerup', (e) => {
-        if (!pointerActive) return;
-        pointerActive = false;
-
-        if (!e || e.pointerType !== 'touch') return;
-        if (isBusyTyping()) return;
-
-        const dx = e.clientX - startX;
-        const dy = e.clientY - startY;
-        const dt = Math.max(1, performance.now() - startTime);
-
-        // Only treat as a vertical swipe if mostly vertical and meaningful.
-        if (Math.abs(dy) < 52) return;
-        if (Math.abs(dy) < Math.abs(dx) * 1.35) return;
-
-        // Avoid very slow drags (let native scroll-snap do its thing)
-        const speed = Math.abs(dy) / dt; // px/ms
-        if (speed < 0.18) return;
-
-        const dir = dy < 0 ? 1 : -1; // swipe up -> scroll down
-        // Let the native scroll settle for a tick, then snap to target.
-        requestAnimationFrame(() => maybeSnapBySwipe(dir));
-      }, { passive: true });
-
-      window.addEventListener('pointercancel', () => {
-        pointerActive = false;
-      }, { passive: true });
-    } else {
-      // Fallback: Touch Events
-      window.addEventListener('touchstart', (e) => {
-        const t = e.changedTouches && e.changedTouches[0];
-        if (!t) return;
-        if (isBusyTyping()) return;
-        if (shouldIgnoreStartTarget(e.target)) return;
-        startX = t.clientX;
-        startY = t.clientY;
-        startTime = performance.now();
-      }, { passive: true });
-
-      window.addEventListener('touchend', (e) => {
-        const t = e.changedTouches && e.changedTouches[0];
-        if (!t) return;
-        if (isBusyTyping()) return;
-
-        const dx = t.clientX - startX;
-        const dy = t.clientY - startY;
-        const dt = Math.max(1, performance.now() - startTime);
-
-        if (Math.abs(dy) < 52) return;
-        if (Math.abs(dy) < Math.abs(dx) * 1.35) return;
-        const speed = Math.abs(dy) / dt;
-        if (speed < 0.18) return;
-
-        const dir = dy < 0 ? 1 : -1;
-        requestAnimationFrame(() => maybeSnapBySwipe(dir));
-      }, { passive: true });
-    }
-  })();
+  // Touch/swipe: native smooth scrolling only (no snap hijacking)
 
   // ===== Service Navigation =====
   let currentServiceIndex = 0;
@@ -818,7 +527,369 @@ document.addEventListener('DOMContentLoaded', function () {
     targets.forEach(el => observer.observe(el));
   })();
 
-  // ===== Initialize =====
+  // ===== Scroll Progress Bar =====
+  (function initScrollProgressBar(){
+    // Create progress bar element
+    const progressBar = document.createElement('div');
+    progressBar.className = 'scroll-progress at-top';
+    progressBar.setAttribute('aria-hidden', 'true'); // Accessibility
+    
+    // Insert at the very beginning of body for top positioning
+    document.body.insertBefore(progressBar, document.body.firstChild);
+
+    // Calculate and update progress with improved accuracy
+    const updateScrollProgress = () => {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      
+      // Prevent division by zero
+      if (docHeight <= 0) {
+        progressBar.style.width = '0%';
+        return;
+      }
+      
+      const scrollPercent = (scrollTop / docHeight) * 100;
+      
+      // Show/hide progress bar based on scroll position
+      if (scrollTop < 30) {
+        progressBar.classList.add('at-top');
+      } else {
+        progressBar.classList.remove('at-top');
+      }
+      
+      // Smooth progress update with better easing
+      const clampedPercent = Math.min(Math.max(scrollPercent, 0), 100);
+      progressBar.style.width = clampedPercent + '%';
+    };
+
+    // Optimized scroll listener with RAF throttling
+    let ticking = false;
+    const handleScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          updateScrollProgress();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    // Event listeners
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', () => {
+      requestAnimationFrame(updateScrollProgress);
+    }, { passive: true });
+    
+    // Initial call after a short delay to ensure DOM is ready
+    setTimeout(updateScrollProgress, 100);
+  })();
+
+  // ===== Enhanced Smooth Scroll Features =====
+  
+  // Smooth scroll to top button
+  (function initScrollToTop(){
+    const scrollBtn = document.createElement('button');
+    scrollBtn.innerHTML = '↑';
+    scrollBtn.className = 'scroll-to-top';
+    scrollBtn.setAttribute('aria-label', 'Nach oben scrollen');
+    scrollBtn.style.cssText = `
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 50px;
+      height: 50px;
+      background: var(--accent-2);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      font-size: 20px;
+      cursor: pointer;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+      transform: scale(0.8);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    `;
+
+    scrollBtn.addEventListener('click', () => {
+      scrollToId('heroStage');
+    });
+
+    // Show/hide based on scroll position
+    window.addEventListener('scroll', () => {
+      const shouldShow = window.scrollY > 300;
+      scrollBtn.style.opacity = shouldShow ? '1' : '0';
+      scrollBtn.style.visibility = shouldShow ? 'visible' : 'hidden';
+      scrollBtn.style.transform = shouldShow ? 'scale(1)' : 'scale(0.8)';
+    }, { passive: true });
+
+    document.body.appendChild(scrollBtn);
+  })();
+
+  // Enhanced keyboard navigation with smooth scroll performance optimization
+  (function initKeyboardNavigation(){
+    const sections = Array.from(document.querySelectorAll('main.page > section'));
+    let currentSectionIndex = 0;
+    let isScrolling = false;
+
+    // Throttle scroll updates for better performance
+    const throttle = (func, limit) => {
+      let inThrottle;
+      return function() {
+        const args = arguments;
+        const context = this;
+        if (!inThrottle) {
+          func.apply(context, args);
+          inThrottle = true;
+          setTimeout(() => inThrottle = false, limit);
+        }
+      };
+    };
+
+    document.addEventListener('keydown', (e) => {
+      // Alt + Arrow keys for section navigation
+      if (e.altKey && !e.ctrlKey && !e.shiftKey) {
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          currentSectionIndex = Math.min(currentSectionIndex + 1, sections.length - 1);
+          const sectionId = sections[currentSectionIndex].getAttribute('id');
+          if (sectionId) {
+            isScrolling = true;
+            scrollToId(sectionId);
+            setTimeout(() => isScrolling = false, 1000); // Reset after animation
+          }
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          currentSectionIndex = Math.max(currentSectionIndex - 1, 0);
+          const sectionId = sections[currentSectionIndex].getAttribute('id');
+          if (sectionId) {
+            isScrolling = true;
+            scrollToId(sectionId);
+            setTimeout(() => isScrolling = false, 1000); // Reset after animation
+          }
+        }
+      }
+    });
+
+    // Use Intersection Observer for better performance
+    const observer = new IntersectionObserver((entries) => {
+      if (isScrolling) return; // Don't update during programmatic scrolling
+      
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const sectionIndex = sections.findIndex(s => s === entry.target);
+          if (sectionIndex !== -1) {
+            currentSectionIndex = sectionIndex;
+          }
+        }
+      });
+    }, {
+      threshold: 0.6,
+      rootMargin: '-80px 0px'
+    });
+
+    sections.forEach(section => observer.observe(section));
+  })();
   updateAllServiceButtons(0);
   updateServiceContent(0);
+
+  // ===== Language Switcher =====
+  (function initLanguageSwitcher() {
+    const translations = {
+      en: {
+        'hero.eyebrow': 'Websolutions',
+        'hero.title.line1': 'Transform Your',
+        'hero.title.line2': 'Digital Presence',
+        'hero.title.line3': 'Into Growth',
+        'hero.subtitle': 'We build high-performance websites that convert visitors into customers. Modern design, blazing-fast speeds, and SEO-optimized for maximum visibility.',
+        'hero.cta.primary': 'Start Your Project',
+        'hero.testimonial.text': '"Exceptional work! Our website traffic increased by 200% within three months."',
+        'hero.testimonial.name': 'Gerry Freiburghaus, Jahrgänger Verein Spiez',
+        'projects.eyebrow': 'Portfolio',
+        'projects.title': 'Our Last Projects',
+        'projects.description': 'Discover our latest work and see what we can create for you',
+        'nav.home': 'Home',
+        'nav.services': 'Services',
+        'nav.references': 'References',
+        'nav.seo': 'SEO & GEO',
+        'nav.contact': 'Contact us',
+        'nav.imprint': 'Imprint'
+      },
+      de: {
+        'hero.eyebrow': 'Websolutions',
+        'hero.title.line1': 'Verwandle Deine',
+        'hero.title.line2': 'Digitale Präsenz',
+        'hero.title.line3': 'In Wachstum',
+        'hero.subtitle': 'Wir erstellen hochleistungsfähige Websites, die Besucher zu Kunden machen. Modernes Design, blitzschnelle Ladezeiten und SEO-optimiert für maximale Sichtbarkeit.',
+        'hero.cta.primary': 'Projekt Starten',
+        'hero.testimonial.text': '"Hervorragende Arbeit! Unser Website-Traffic stieg innerhalb von drei Monaten um 200%."',
+        'hero.testimonial.name': 'Gerry Freiburghaus, Jahrgänger Verein Spiez',
+        'projects.eyebrow': 'Portfolio',
+        'projects.title': 'Unsere Letzten Projekte',
+        'projects.description': 'Entdecke unsere neuesten Arbeiten und sieh, was wir für dich erstellen können',
+        'nav.home': 'Startseite',
+        'nav.services': 'Services',
+        'nav.references': 'Referenzen',
+        'nav.seo': 'SEO & GEO',
+        'nav.contact': 'Kontakt',
+        'nav.imprint': 'Impressum'
+      },
+      fr: {
+        'hero.eyebrow': 'Websolutions',
+        'hero.title.line1': 'Transformez Votre',
+        'hero.title.line2': 'Présence Digitale',
+        'hero.title.line3': 'En Croissance',
+        'hero.subtitle': 'Nous créons des sites web performants qui convertissent les visiteurs en clients. Design moderne, vitesse ultra-rapide et optimisé SEO pour une visibilité maximale.',
+        'hero.cta.primary': 'Démarrer Votre Projet',
+        'hero.testimonial.text': '"Travail exceptionnel! Le trafic de notre site a augmenté de 200% en trois mois."',
+        'hero.testimonial.name': 'Gerry Freiburghaus, Jahrgänger Verein Spiez',
+        'projects.eyebrow': 'Portfolio',
+        'projects.title': 'Nos Derniers Projets',
+        'projects.description': 'Découvrez nos derniers travaux et voyez ce que nous pouvons créer pour vous',
+        'nav.home': 'Accueil',
+        'nav.services': 'Services',
+        'nav.references': 'Références',
+        'nav.seo': 'SEO & GEO',
+        'nav.contact': 'Contact',
+        'nav.imprint': 'Mentions légales'
+      }
+    };
+
+    const langBtn = document.getElementById('langSwitcherBtn');
+    const langDropdown = document.getElementById('langDropdown');
+    const langCurrent = document.getElementById('langCurrent');
+    const langOptions = document.querySelectorAll('.lang-option');
+
+    if (!langBtn || !langDropdown) return;
+
+    let currentLang = localStorage.getItem('ws-lang') || 'en';
+
+    function updateLanguage(lang) {
+      currentLang = lang;
+      localStorage.setItem('ws-lang', lang);
+
+      // Update current display
+      langCurrent.textContent = lang.toUpperCase();
+
+      // Update active state
+      langOptions.forEach(opt => {
+        opt.classList.toggle('lang-option--active', opt.dataset.lang === lang);
+      });
+
+      // Apply translations with animation
+      const trans = translations[lang];
+      if (!trans) return;
+
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (trans[key]) {
+          el.classList.remove('lang-animating');
+          // Force reflow to restart animation
+          void el.offsetWidth;
+          el.textContent = trans[key];
+          el.classList.add('lang-animating');
+        }
+      });
+
+      // Update html lang attribute
+      document.documentElement.lang = lang === 'de' ? 'de-CH' : lang === 'fr' ? 'fr-CH' : 'en';
+    }
+
+    function toggleDropdown() {
+      const isOpen = langDropdown.classList.contains('active');
+      langDropdown.classList.toggle('active', !isOpen);
+      langBtn.setAttribute('aria-expanded', !isOpen);
+    }
+
+    function closeDropdown() {
+      langDropdown.classList.remove('active');
+      langBtn.setAttribute('aria-expanded', 'false');
+    }
+
+    // Event listeners
+    langBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleDropdown();
+    });
+
+    langOptions.forEach(opt => {
+      opt.addEventListener('click', () => {
+        const lang = opt.dataset.lang;
+        updateLanguage(lang);
+        closeDropdown();
+      });
+    });
+
+    // Close on outside click
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.lang-switcher')) {
+        closeDropdown();
+      }
+    });
+
+    // Close on escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeDropdown();
+      }
+    });
+
+    // Initialize with saved language
+    updateLanguage(currentLang);
+  })();
+
+  // ===== Referenzen Section Scroll Reveal =====
+  (function initReferenzenReveal() {
+    const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
+
+    const revealSections = document.querySelectorAll('.reveal-section');
+    if (revealSections.length === 0) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.2,
+      rootMargin: '0px 0px -10% 0px'
+    });
+
+    revealSections.forEach(section => observer.observe(section));
+  })();
+
+  // ===== Hero Windows Parallax Effect =====
+  (function initHeroParallax() {
+    const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
+
+    const windowsContainer = document.querySelector('.hero-windows-container');
+    if (!windowsContainer) return;
+
+    const windows = windowsContainer.querySelectorAll('.hero-window');
+    
+    windowsContainer.addEventListener('mousemove', (e) => {
+      const rect = windowsContainer.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+
+      windows.forEach((win, i) => {
+        const factor = (i + 1) * 2;
+        const rotateY = x * factor * 3;
+        const rotateX = -y * factor * 2;
+        
+        win.style.transform = `${win.dataset.baseTransform || ''} rotateY(${rotateY}deg) rotateX(${rotateX}deg)`;
+      });
+    });
+
+    windowsContainer.addEventListener('mouseleave', () => {
+      windows.forEach(win => {
+        win.style.transform = '';
+      });
+    });
+  })();
 });

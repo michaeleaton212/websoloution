@@ -37,95 +37,179 @@
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="partials/cookie-consent.css" data-cookie-consent-style="1" />
 
-  <!-- Structured Data (GEO/SEO): Organization + Local Business + FAQ -->
+  <!-- Structured Data (SEO/GEO): Organization, LocalBusiness, WebSite, FAQPage, Services -->
+  <!-- Source of truth: schema.json — keep both in sync when updating -->
   <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@graph": [
-        {
-          "@type": "Organization",
-          "@id": "https://websolutionsrafz.ch/#org",
-          "name": "Websolutions",
-          "url": "https://websolutionsrafz.ch/",
-          "email": "info@websolutions.ch",
-          "telephone": "+41 79 453 41 69"
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://websolutionsrafz.ch/#org",
+        "name": "Websolutions",
+        "legalName": "Websolutions Rafz",
+        "url": "https://websolutionsrafz.ch/",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://websolutionsrafz.ch/favicon.png",
+          "width": 512,
+          "height": 512
         },
-        {
-          "@type": "ProfessionalService",
-          "@id": "https://websolutionsrafz.ch/#localbusiness",
-          "name": "Websolutions",
-          "url": "https://websolutionsrafz.ch/",
-          "email": "info@websolutions.ch",
-          "telephone": "+41 79 453 41 69",
-          "address": {
-            "@type": "PostalAddress",
-            "streetAddress": "Peterwise 3",
-            "postalCode": "8197",
-            "addressLocality": "Rafz",
-            "addressCountry": "CH"
-          },
-          "areaServed": [
-            { "@type": "AdministrativeArea", "name": "Kanton Zürich" },
-            { "@type": "Country", "name": "Schweiz" }
-          ],
-          "knowsAbout": [
-            "Webdesign",
-            "Technisches SEO",
-            "OnPage SEO",
-            "GEO (Generative Engine Optimization)",
-            "Performance-Optimierung",
-            "Hosting",
-            "Wartung"
+        "image": "https://websolutionsrafz.ch/favicon.png",
+        "email": "info@websolutions.ch",
+        "telephone": "+41 79 453 41 69",
+        "foundingDate": "2024",
+        "description": "Websolutions in Rafz (ZH) erstellt hochperformante Websites, setzt technisches SEO um und optimiert Inhalte für KI-Suche (GEO). Inkl. Hosting, Wartung und Support.",
+        "slogan": "Webdesign, SEO & GEO aus einer Hand",
+        "knowsAbout": [
+          "Webdesign","Webentwicklung","Technisches SEO","OnPage SEO",
+          "Generative Engine Optimization","GEO","Performance-Optimierung",
+          "Hosting","Wartung","Conversion Rate Optimization",
+          "Landing Pages","Corporate Websites","E-Commerce"
+        ],
+        "hasOfferCatalog": {
+          "@type": "OfferCatalog",
+          "name": "Websolutions Leistungen",
+          "itemListElement": [
+            { "@type": "Offer", "name": "Webdesign & Entwicklung", "description": "Hochperformante, responsive Websites mit modernem Design, SEO-Grundlagen und Analytics-Setup. Lieferzeit 7–14 Tage.", "url": "https://websolutionsrafz.ch/#pricing" },
+            { "@type": "Offer", "name": "Suchmaschinenoptimierung (SEO)", "description": "Technisches SEO, OnPage-Optimierung, Keyword-Recherche und monatliches Reporting.", "url": "https://websolutionsrafz.ch/#seo-geo" },
+            { "@type": "Offer", "name": "GEO – Generative Engine Optimization", "description": "Optimierung für KI-Suche (ChatGPT, Perplexity, Google AI Overviews): klare Entitätsstruktur, FAQs und zitierfähige Inhalte.", "url": "https://websolutionsrafz.ch/#seo-geo" },
+            { "@type": "Offer", "name": "Hosting & Wartung", "description": "Domain, SSL, Performance-Setup, Updates, Backups und laufende Anpassungen.", "url": "https://websolutionsrafz.ch/#pricing" },
+            { "@type": "Offer", "name": "Markenidentität & Branding", "description": "Logo, Styleguide, Farbpalette und Typografie. Lieferzeit 5–10 Tage, 3 Revisionsrunden.", "url": "https://websolutionsrafz.ch/#pricing" }
           ]
         },
-        {
-          "@type": "FAQPage",
-          "@id": "https://websolutionsrafz.ch/#faq",
-          "mainEntity": [
-            {
-              "@type": "Question",
-              "name": "Was macht Websolutions konkret?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Wir erstellen und betreuen Websites (Webdesign/Entwicklung), setzen technisches SEO um und optimieren Inhalte für KI-Suche (GEO). Zusätzlich bieten wir Hosting, Wartung und Support."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Für welche Region arbeitet ihr?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Wir sitzen in Rafz (ZH) und arbeiten für Unternehmen in der Schweiz – besonders in der Region Zürich und Umgebung."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Was bedeutet GEO (Generative Engine Optimization)?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "GEO ist Optimierung für KI-Suche (z.B. ChatGPT, Perplexity, Google AI Overviews): klare Struktur, zitierfähige Aussagen, FAQs und saubere Quellen/Entitäten, damit KI-Systeme Inhalte korrekt verstehen und wiedergeben."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Bietet ihr auch Hosting und Wartung an?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Ja. Wir übernehmen Domain/SSL, Performance-Setup sowie Updates, Backups und laufende Anpassungen – damit die Website dauerhaft schnell und sicher bleibt."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Wie kann ich euch kontaktieren?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Über das Formular auf dieser Seite oder per E-Mail an info@websolutions.ch bzw. telefonisch unter +41 79 453 41 69."
-              }
-            }
+        "sameAs": ["https://websolutionsrafz.ch/"]
+      },
+      {
+        "@type": "ProfessionalService",
+        "@id": "https://websolutionsrafz.ch/#localbusiness",
+        "name": "Websolutions",
+        "image": "https://websolutionsrafz.ch/favicon.png",
+        "url": "https://websolutionsrafz.ch/",
+        "email": "info@websolutions.ch",
+        "telephone": "+41 79 453 41 69",
+        "priceRange": "CHF",
+        "currenciesAccepted": "CHF",
+        "paymentAccepted": "Banküberweisung, Rechnung",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Peterwise 3",
+          "postalCode": "8197",
+          "addressLocality": "Rafz",
+          "addressRegion": "ZH",
+          "addressCountry": "CH"
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": "47.6139",
+          "longitude": "8.5272"
+        },
+        "areaServed": [
+          { "@type": "AdministrativeArea", "name": "Kanton Zürich" },
+          { "@type": "AdministrativeArea", "name": "Kanton Schaffhausen" },
+          { "@type": "Country", "name": "Schweiz" }
+        ],
+        "description": "Websolutions Rafz erstellt professionelle Websites mit technischem SEO und GEO für Unternehmen in der Schweiz, besonders im Raum Zürich.",
+        "parentOrganization": { "@id": "https://websolutionsrafz.ch/#org" }
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://websolutionsrafz.ch/#website",
+        "url": "https://websolutionsrafz.ch/",
+        "name": "Websolutions Rafz",
+        "description": "Webdesign, technisches SEO und GEO (Generative Engine Optimization) in Rafz/Zürich/Schweiz.",
+        "inLanguage": ["de-CH","en","fr-CH"],
+        "publisher": { "@id": "https://websolutionsrafz.ch/#org" }
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://websolutionsrafz.ch/#webpage",
+        "url": "https://websolutionsrafz.ch/",
+        "name": "Websolutions Rafz – Webdesign, SEO & GEO (Schweiz)",
+        "description": "Webdesign, technisches SEO & GEO (Optimierung für KI-Suche). Schnelle, wartbare Websites inkl. Hosting, Wartung und Support.",
+        "inLanguage": "de-CH",
+        "isPartOf": { "@id": "https://websolutionsrafz.ch/#website" },
+        "about": { "@id": "https://websolutionsrafz.ch/#org" },
+        "breadcrumb": {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Startseite", "item": "https://websolutionsrafz.ch/" }
           ]
         }
-      ]
-    }
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://websolutionsrafz.ch/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Was macht Websolutions konkret?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Websolutions erstellt und betreut professionelle Websites (Webdesign und Entwicklung), setzt technisches SEO um und optimiert Inhalte für KI-Suche (GEO – Generative Engine Optimization). Zusätzlich bieten wir Hosting, Wartung und Support aus einer Hand." }
+          },
+          {
+            "@type": "Question",
+            "name": "Für welche Region arbeitet Websolutions?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Websolutions sitzt in Rafz (Kanton Zürich) und arbeitet für Unternehmen in der ganzen Schweiz – mit Schwerpunkt in der Region Zürich, Schaffhausen und Umgebung." }
+          },
+          {
+            "@type": "Question",
+            "name": "Was ist GEO (Generative Engine Optimization)?",
+            "acceptedAnswer": { "@type": "Answer", "text": "GEO ist die Optimierung von Website-Inhalten für KI-basierte Suchsysteme wie ChatGPT, Perplexity und Google AI Overviews. Dabei werden klare Entitätsstrukturen, zitierfähige Aussagen, FAQs und saubere Quellen eingesetzt, damit KI-Systeme Inhalte korrekt verstehen und wiedergeben." }
+          },
+          {
+            "@type": "Question",
+            "name": "Wie lange dauert die Erstellung einer Website?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Eine Standard-Website oder Landing Page wird in 7–14 Tagen geliefert. Komplexere Projekte wie E-Commerce-Lösungen benötigen 14–30 Tage. Die genaue Lieferzeit besprechen wir im Erstgespräch." }
+          },
+          {
+            "@type": "Question",
+            "name": "Bietet Websolutions auch Hosting und Wartung an?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Ja. Wir übernehmen Domain-Setup, SSL-Zertifikat, Performance-Konfiguration sowie regelmässige Updates, Backups und laufende Anpassungen – damit die Website dauerhaft schnell, sicher und aktuell bleibt." }
+          },
+          {
+            "@type": "Question",
+            "name": "Wie viel kostet eine Website bei Websolutions?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Die Kosten richten sich nach Umfang und Anforderungen des Projekts. Wir erstellen ein individuelles Angebot nach einem kostenlosen Erstgespräch. Kontaktieren Sie uns per E-Mail an info@websolutions.ch oder telefonisch unter +41 79 453 41 69." }
+          },
+          {
+            "@type": "Question",
+            "name": "Wie kann ich Websolutions kontaktieren?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Sie erreichen uns über das Kontaktformular auf websolutionsrafz.ch, per E-Mail an info@websolutions.ch oder telefonisch unter +41 79 453 41 69." }
+          }
+        ]
+      },
+      {
+        "@type": "Service",
+        "@id": "https://websolutionsrafz.ch/#service-webdesign",
+        "name": "Webdesign & Webentwicklung",
+        "description": "Professionelle, hochperformante Websites und Landing Pages mit modernem Design, responsivem Layout, SEO-Grundlagen und Analytics-Setup. 90+ Lighthouse Score als Ziel.",
+        "provider": { "@id": "https://websolutionsrafz.ch/#org" },
+        "areaServed": { "@type": "Country", "name": "Schweiz" },
+        "serviceType": "Webdesign",
+        "url": "https://websolutionsrafz.ch/#pricing"
+      },
+      {
+        "@type": "Service",
+        "@id": "https://websolutionsrafz.ch/#service-seo",
+        "name": "Suchmaschinenoptimierung (SEO & GEO)",
+        "description": "Technisches SEO, OnPage-Optimierung und GEO (Generative Engine Optimization für KI-Suche). Inklusive Keyword-Recherche, technischem Audit und monatlichem Reporting.",
+        "provider": { "@id": "https://websolutionsrafz.ch/#org" },
+        "areaServed": { "@type": "Country", "name": "Schweiz" },
+        "serviceType": "SEO",
+        "url": "https://websolutionsrafz.ch/#seo-geo"
+      },
+      {
+        "@type": "Service",
+        "@id": "https://websolutionsrafz.ch/#service-hosting",
+        "name": "Hosting & Wartung",
+        "description": "Zuverlässiges Web-Hosting mit SSL, Performance-Setup sowie regelmässige Updates, Backups und Support für dauerhaften Betrieb.",
+        "provider": { "@id": "https://websolutionsrafz.ch/#org" },
+        "areaServed": { "@type": "Country", "name": "Schweiz" },
+        "serviceType": "Hosting",
+        "url": "https://websolutionsrafz.ch/#pricing"
+      }
+    ]
+  }
   </script>
 </head>
 
@@ -197,6 +281,44 @@
     <div id="introCursor" aria-hidden="true">click</div>
   </div>
 
+  <!-- Language Switcher (floating top-right) -->
+  <div class="lang-switcher" id="langSwitcher">
+    <button class="lang-switcher-btn" id="langSwitcherBtn" aria-label="Change language" aria-expanded="false">
+      <svg class="lang-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="2" y1="12" x2="22" y2="12"></line>
+        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+      </svg>
+      <span class="lang-current" id="langCurrent">EN</span>
+      <svg class="lang-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </button>
+    <div class="lang-dropdown" id="langDropdown">
+      <button class="lang-option lang-option--active" data-lang="en">
+        <span class="lang-option-flag">🇬🇧</span>
+        <span class="lang-option-name">English</span>
+        <svg class="lang-option-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      </button>
+      <button class="lang-option" data-lang="de">
+        <span class="lang-option-flag">🇩🇪</span>
+        <span class="lang-option-name">Deutsch</span>
+        <svg class="lang-option-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      </button>
+      <button class="lang-option" data-lang="fr">
+        <span class="lang-option-flag">🇫🇷</span>
+        <span class="lang-option-name">Français</span>
+        <svg class="lang-option-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      </button>
+    </div>
+  </div>
+
   <!-- Persistent Swipe Hint (nur Standard-Seite, bleibt beim Scrollen) -->
   <div id="swipeHint" aria-hidden="true">
     <div class="swipeHint-inner">
@@ -218,32 +340,40 @@
           <a class="nav-link" href="#contact-us">Contact us</a>
           <a class="nav-link" href="#imprint">Imprint</a>
           <span class="navbar-sep" aria-hidden="true"></span>
-          <span class="lq-toggle-wrap">
-            <button class="lq-toggle" id="themeToggle" type="button"
-                    aria-label="Dark / Light Mode umschalten" aria-pressed="false"
-                    title="Dark / Light Mode">
-              <span class="lq-toggle__track">
-                <span class="lq-toggle__thumb"></span>
+          <div class="navbar-controls-group">
+            <div class="navbar-toggles">
+              <span class="lq-toggle-wrap">
+                <button class="lq-toggle" id="themeToggle" type="button"
+                        aria-label="Dark / Light Mode umschalten" aria-pressed="false"
+                        title="Dark / Light Mode">
+                  <span class="lq-toggle__track">
+                    <span class="lq-toggle__thumb"></span>
+                  </span>
+                </button>
+                <span class="lq-toggle-label" id="themeLabelEl">Dark Mode</span>
               </span>
-            </button>
-            <span class="lq-toggle-label" id="themeLabelEl">Dark Mode</span>
-          </span>
-          <span class="lq-toggle-wrap">
-            <button class="lq-toggle" id="introToggle" type="button"
-                    aria-label="Intro-Animation ein/aus" aria-pressed="true"
-                    title="Intro-Animation">
-              <span class="lq-toggle__track">
-                <span class="lq-toggle__thumb"></span>
+              <span class="lq-toggle-wrap">
+                <button class="lq-toggle" id="introToggle" type="button"
+                        aria-label="Intro-Animation ein/aus" aria-pressed="true"
+                        title="Intro-Animation">
+                  <span class="lq-toggle__track">
+                    <span class="lq-toggle__thumb"></span>
+                  </span>
+                </button>
+                <span class="lq-toggle-label" aria-hidden="true">Animation</span>
               </span>
-            </button>
-            <span class="lq-toggle-label" aria-hidden="true">Intro-Animation</span>
-          </span>
+            </div>
+            <div class="navbar-controls-note">Dark/Light Mode & Animation</div>
+          </div>
         </nav>
       </div>
 
       <main class="page premium-fadein">
         <!-- HERO -->
         <section class="hero" id="heroStage">
+          <!-- Subtle grid background -->
+          <div class="hero-grid-bg" aria-hidden="true"></div>
+          
           <div class="hero-bg" aria-hidden="true">
             <span class="hero-particle" style="--sz:3px;--op:0.55;--top:28%;--left:62%;--dur:8s;--delay:-1s;--dx:14px;--dy:-22px;" aria-hidden="true"></span>
             <span class="hero-particle" style="--sz:5px;--op:0.30;--top:58%;--left:74%;--dur:11s;--delay:-4s;--dx:-16px;--dy:-14px;" aria-hidden="true"></span>
@@ -254,25 +384,101 @@
             <span class="hero-particle" style="--sz:4px;--op:0.32;--top:65%;--left:58%;--dur:10s;--delay:-5s;--dx:20px;--dy:-12px;" aria-hidden="true"></span>
           </div>
 
-          <div class="hero-shell hero-shell--single">
+          <div class="hero-shell hero-shell--two-col">
+            <!-- LEFT SIDE: Content -->
             <div class="hero-copy">
-              <div class="hero-eyebrow">Websolutions</div>
+              <div class="hero-eyebrow" data-i18n="hero.eyebrow">Websolutions</div>
 
-              <div class="hero-offer-row" aria-label="Angebot: SEO und GEO">
-                <span class="hero-offer-pill"><span class="grad-shift">SEO &amp; GEO</span></span>
-              </div>
-
-              <h1 class="hero-title">
-                <span class="word-reveal" style="--i:0">Make</span>
-                <span class="word-reveal" style="--i:1">your</span>
-                <span class="word-reveal" style="--i:2">business</span>
-                <span class="word-reveal" style="--i:3">visible</span>
+              <h1 class="hero-title hero-title--large">
+                <span class="word-reveal" style="--i:0" data-i18n="hero.title.line1">Transform Your</span><br>
+                <span class="word-reveal" style="--i:1" data-i18n="hero.title.line2">Digital Presence</span><br>
+                <span class="word-reveal hero-title-accent" style="--i:2" data-i18n="hero.title.line3">Into Growth</span>
               </h1>
-              <p class="hero-sub">Webdesign, SEO, Branding und Wartung – klar, schnell und wartbar umgesetzt.</p>
+              <p class="hero-sub" data-i18n="hero.subtitle">We build high-performance websites that convert visitors into customers. Modern design, blazing-fast speeds, and SEO-optimized for maximum visibility.</p>
 
               <div class="hero-cta-row">
-                <a class="hero-cta" href="#contact-us">Kostenloses Erstgespräch</a>
-                <a class="hero-cta hero-cta--ghost" href="#pricing">Services ansehen</a>
+                <a class="hero-cta hero-cta--primary" href="#contact-us" data-i18n="hero.cta.primary">Start Your Project</a>
+              </div>
+
+              <!-- Testimonial Block -->
+              <div class="hero-testimonial">
+                <div class="hero-testimonial-stars" aria-label="5 star rating">
+                  <svg class="star-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                  <svg class="star-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                  <svg class="star-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                  <svg class="star-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                  <svg class="star-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                </div>
+                <p class="hero-testimonial-text" data-i18n="hero.testimonial.text">"Exceptional work! Our website traffic increased by 200% within three months."</p>
+                <div class="hero-testimonial-author">
+                  <div class="hero-testimonial-avatar">GF</div>
+                  <span class="hero-testimonial-name" data-i18n="hero.testimonial.name">Gerry Freiburghaus, Jahrgänger Verein Spiez</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- RIGHT SIDE: 3D Floating Windows -->
+            <div class="hero-windows-container">
+              <div class="hero-windows-scene">
+                <!-- Window 1 - Front/Main -->
+                <div class="hero-window hero-window--1">
+                  <div class="hero-window-bar">
+                    <span class="hero-window-dot hero-window-dot--red"></span>
+                    <span class="hero-window-dot hero-window-dot--yellow"></span>
+                    <span class="hero-window-dot hero-window-dot--green"></span>
+                  </div>
+                  <div class="hero-window-content">
+                    <div class="hero-window-mock">
+                      <div class="mock-nav"></div>
+                      <div class="mock-hero">
+                        <div class="mock-headline"></div>
+                        <div class="mock-subline"></div>
+                        <div class="mock-btn"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Window 2 - Behind left -->
+                <div class="hero-window hero-window--2">
+                  <div class="hero-window-bar">
+                    <span class="hero-window-dot hero-window-dot--red"></span>
+                    <span class="hero-window-dot hero-window-dot--yellow"></span>
+                    <span class="hero-window-dot hero-window-dot--green"></span>
+                  </div>
+                  <div class="hero-window-content">
+                    <div class="hero-window-mock hero-window-mock--alt">
+                      <div class="mock-nav"></div>
+                      <div class="mock-hero">
+                        <div class="mock-headline mock-headline--short"></div>
+                        <div class="mock-subline"></div>
+                        <div class="mock-cards">
+                          <div class="mock-card"></div>
+                          <div class="mock-card"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Window 3 - Behind right -->
+                <div class="hero-window hero-window--3">
+                  <div class="hero-window-bar">
+                    <span class="hero-window-dot hero-window-dot--red"></span>
+                    <span class="hero-window-dot hero-window-dot--yellow"></span>
+                    <span class="hero-window-dot hero-window-dot--green"></span>
+                  </div>
+                  <div class="hero-window-content">
+                    <div class="hero-window-mock hero-window-mock--dark">
+                      <div class="mock-nav mock-nav--dark"></div>
+                      <div class="mock-hero">
+                        <div class="mock-headline"></div>
+                        <div class="mock-subline mock-subline--wide"></div>
+                        <div class="mock-btn mock-btn--accent"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -329,56 +535,24 @@
 </section>
 
         <!-- REFERENZEN -->
-        <section class="referenzen-section" id="referenzen">
-          <div class="page-content">
-            <header class="services-head">
-              <div class="services-eyebrow">Referenzen</div>
-              <h2 class="hero-title services-title">Unsere Projekte</h2>
-              <p class="services-sub">Websites, die wir für unsere Kunden gebaut haben – live und abrufbar.</p>
-            </header>
-
-            <div class="services-feature-grid referenzen-grid" aria-label="Kundenprojekte">
-
-              <!-- ── Projekt 1 – bitte URL + Beschreibung anpassen ── -->
-              <a class="services-feature-card referenzen-card"
-                 href="https://example-kunde1.ch" target="_blank" rel="noopener"
-                 aria-label="Projekt: Muster GmbH – Website besuchen">
-                <div class="services-feature-kicker">Webdesign</div>
-                <h3 class="services-feature-title">Muster GmbH</h3>
-                <p class="services-feature-text">Moderner Auftritt für ein lokales Dienstleistungsunternehmen – schnell, sauber, mobil optimiert.</p>
-                <div class="services-feature-footer">
-                  <span class="referenzen-domain">example-kunde1.ch</span>
-                  <span class="services-feature-arrow referenzen-arrow" aria-hidden="true">↗</span>
-                </div>
-              </a>
-
-              <!-- ── Projekt 2 ── -->
-              <a class="services-feature-card referenzen-card"
-                 href="https://example-kunde2.ch" target="_blank" rel="noopener"
-                 aria-label="Projekt: Beispiel AG – Website besuchen">
-                <div class="services-feature-kicker">SEO &amp; Design</div>
-                <h3 class="services-feature-title">Beispiel AG</h3>
-                <p class="services-feature-text">Kompletter Neuaufbau mit SEO-Basis, strukturierten Daten und GEO-Optimierung für die Region Zürich.</p>
-                <div class="services-feature-footer">
-                  <span class="referenzen-domain">example-kunde2.ch</span>
-                  <span class="services-feature-arrow referenzen-arrow" aria-hidden="true">↗</span>
-                </div>
-              </a>
-
-              <!-- ── Projekt 3 ── -->
-              <a class="services-feature-card referenzen-card"
-                 href="https://example-kunde3.ch" target="_blank" rel="noopener"
-                 aria-label="Projekt: Demo Shop – Website besuchen">
-                <div class="services-feature-kicker">Hosting &amp; Wartung</div>
-                <h3 class="services-feature-title">Demo Shop</h3>
-                <p class="services-feature-text">Laufende Betreuung, SSL, Backups und Performance-Optimierung – damit die Seite immer läuft.</p>
-                <div class="services-feature-footer">
-                  <span class="referenzen-domain">example-kunde3.ch</span>
-                  <span class="services-feature-arrow referenzen-arrow" aria-hidden="true">↗</span>
-                </div>
-              </a>
-
-            </div>
+        <section class="referenzen-section referenzen-fullscreen" id="referenzen">
+          <div class="referenzen-fullscreen-content">
+            <a class="referenzen-fullscreen-link" 
+               href="https://www.jgv1945spiez.ch/" 
+               target="_blank" 
+               rel="noopener"
+               aria-label="Visit our last project">
+              <div class="referenzen-fullscreen-inner reveal-section">
+                <div class="services-eyebrow reveal-item" data-i18n="projects.eyebrow">Portfolio</div>
+                <h2 class="hero-title referenzen-fullscreen-title reveal-item" data-i18n="projects.title">Our Last Projects</h2>
+                <p class="referenzen-fullscreen-description reveal-item" data-i18n="projects.description">Discover our latest work and see what we can create for you</p>
+                <span class="referenzen-fullscreen-arrow reveal-item" aria-hidden="true">
+                  <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                  </svg>
+                </span>
+              </div>
+            </a>
           </div>
         </section>
 
